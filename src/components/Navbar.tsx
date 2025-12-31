@@ -6,11 +6,19 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 
-const navLinks = [
+// Navigation links for non-authenticated users
+const publicNavLinks = [
   { label: "Platform", href: "/features" },
   { label: "Use Cases", href: "/use-cases" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },
+];
+
+// Navigation links for authenticated users
+const authNavLinks = [
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Profile", href: "/profile" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -33,6 +41,8 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, [supabase.auth]);
+
+  const navLinks = user ? authNavLinks : publicNavLinks;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
@@ -73,8 +83,13 @@ export default function Navbar() {
               <div className="w-24 h-9 bg-muted animate-pulse rounded-lg" />
             ) : user ? (
               <>
-                <Button variant="ghost" size="sm" className="font-medium" asChild>
-                  <Link href="/dashboard">Dashboard</Link>
+                <Button size="sm" className="font-medium" asChild>
+                  <Link href="/dashboard">
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Go to Dashboard
+                  </Link>
                 </Button>
                 <Link
                   href="/profile"
@@ -83,9 +98,6 @@ export default function Navbar() {
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center text-white text-sm font-medium">
                     {user.email?.charAt(0).toUpperCase() || "U"}
                   </div>
-                  <span className="text-sm font-medium text-foreground hidden lg:block">
-                    {user.user_metadata?.first_name || user.email?.split("@")[0]}
-                  </span>
                 </Link>
               </>
             ) : (
@@ -94,7 +106,7 @@ export default function Navbar() {
                   <Link href="/login">Log in</Link>
                 </Button>
                 <Button size="sm" className="font-medium" asChild>
-                  <Link href="/signup">Start Free Trial</Link>
+                  <Link href="/signup">Get Started</Link>
                 </Button>
               </>
             )}
@@ -148,10 +160,10 @@ export default function Navbar() {
               <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
                 {user ? (
                   <>
-                    <Button variant="outline" size="sm" className="w-full font-medium" asChild>
-                      <Link href="/dashboard">Dashboard</Link>
-                    </Button>
                     <Button size="sm" className="w-full font-medium" asChild>
+                      <Link href="/dashboard">Go to Dashboard</Link>
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full font-medium" asChild>
                       <Link href="/profile">Profile</Link>
                     </Button>
                   </>
@@ -161,7 +173,7 @@ export default function Navbar() {
                       <Link href="/login">Log in</Link>
                     </Button>
                     <Button size="sm" className="w-full font-medium" asChild>
-                      <Link href="/signup">Start Free Trial</Link>
+                      <Link href="/signup">Get Started</Link>
                     </Button>
                   </>
                 )}

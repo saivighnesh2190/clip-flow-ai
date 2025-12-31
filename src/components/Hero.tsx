@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Hero() {
     return (
@@ -26,21 +27,22 @@ export default function Hero() {
 
                 {/* Subheadline */}
                 <p className="max-w-3xl mx-auto text-lg md:text-xl text-muted-foreground mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                    Track your DSA growth across LeetCode, CodeChef, and Codeforces.
+                    Track your DSA growth across LeetCode and Codeforces.
                     Analyze performance, build consistency, and let AI guide your daily learning — all in one smart dashboard.
                 </p>
 
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-                    <Button size="lg" className="text-base px-8 py-6 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
-                        Start Free Trial
+                    <Button size="lg" className="text-base px-8 py-6 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5" asChild>
+                        <Link href="/signup">Get Started Free</Link>
                     </Button>
                     <Button
                         variant="outline"
                         size="lg"
                         className="text-base px-8 py-6 font-semibold hover:bg-muted/50 transition-all duration-300"
+                        asChild
                     >
-                        Request a Demo
+                        <Link href="/features">Explore Features</Link>
                     </Button>
                 </div>
 
@@ -50,7 +52,7 @@ export default function Hero() {
                         <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
-                        <span>Free 14-day trial</span>
+                        <span>100% Free to use</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
