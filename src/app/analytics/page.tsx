@@ -9,17 +9,33 @@ import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { getDailyStats, calculateStreak, DailyStats } from "@/lib/stats";
 import { getActiveGoals, createGoal, deleteGoal, Goal } from "@/lib/goals";
+import { getConnectedPlatforms } from "@/lib/profile";
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 } from "recharts";
 
 const COLORS = ["#22c55e", "#eab308", "#ef4444"];
 
+interface PlatformStats {
+    leetcode?: {
+        totalSolved: number;
+        easySolved: number;
+        mediumSolved: number;
+        hardSolved: number;
+        user?: { ranking: number };
+    };
+    codeforces?: {
+        totalSolved: number;
+        user?: { rating: number };
+    };
+}
+
 export default function AnalyticsPage() {
     const [loading, setLoading] = useState(true);
     const [dailyStats, setDailyStats] = useState<DailyStats[]>([]);
     const [streak, setStreak] = useState({ current: 0, longest: 0 });
     const [goals, setGoals] = useState<Goal[]>([]);
+    const [platformStats, setPlatformStats] = useState<PlatformStats>({});
     const [timeRange, setTimeRange] = useState<30 | 90 | 365>(30);
     const [showGoalForm, setShowGoalForm] = useState(false);
     const [newGoal, setNewGoal] = useState<{ type: "daily" | "weekly" | "rating"; target: number }>({ type: "daily", target: 3 });
@@ -40,14 +56,33 @@ export default function AnalyticsPage() {
 
     const loadData = async () => {
         setLoading(true);
-        const [statsData, streakData, goalsData] = await Promise.all([
+
+        // Load all data in parallel
+        const [statsData, streakData, goalsData, platforms] = await Promise.all([
             getDailyStats(timeRange),
             calculateStreak(),
             getActiveGoals(),
+            getConnectedPlatforms(),
         ]);
+
+        // Fetch current platform stats for real difficulty breakdown
+        const newPlatformStats: PlatformStats = {};
+        for (const { platform, username } of platforms) {
+            try {
+                const response = await fetch(`/api/stats?platform=${platform}&username=${username}`);
+                const data = await response.json();
+                if (data.success) {
+                    newPlatformStats[platform as 'leetcode' | 'codeforces'] = data.data;
+                }
+            } catch (error) {
+                console.error(`Failed to fetch ${platform} stats:`, error);
+            }
+        }
+
         setDailyStats(statsData);
         setStreak(streakData);
         setGoals(goalsData);
+        setPlatformStats(newPlatformStats);
         setLoading(false);
     };
 
@@ -78,13 +113,19 @@ export default function AnalyticsPage() {
         rating: stat.codeforces_rating || stat.leetcode_rating || 0,
     }));
 
-    // Calculate difficulty distribution (mock based on total solved)
-    const totalProblems = dailyStats.reduce((sum, s) => sum + (s.leetcode_solved || 0) + (s.codeforces_solved || 0), 0);
-    const difficultyData = [
-        { name: "Easy", value: Math.round(totalProblems * 0.4), color: "#22c55e" },
-        { name: "Medium", value: Math.round(totalProblems * 0.4), color: "#eab308" },
-        { name: "Hard", value: Math.round(totalProblems * 0.2), color: "#ef4444" },
-    ].filter(d => d.value > 0);
+    // Use REAL difficulty data from LeetCode API
+    const leetcodeData = platformStats.leetcode;
+    const codeforcesData = platformStats.codeforces;
+
+    // Total problems from actual platform data (not daily stats)
+    const totalProblems = (leetcodeData?.totalSolved || 0) + (codeforcesData?.totalSolved || 0);
+
+    // Real difficulty breakdown from LeetCode
+    const difficultyData = leetcodeData ? [
+        { name: "Easy", value: leetcodeData.easySolved || 0, color: "#22c55e" },
+        { name: "Medium", value: leetcodeData.mediumSolved || 0, color: "#eab308" },
+        { name: "Hard", value: leetcodeData.hardSolved || 0, color: "#ef4444" },
+    ].filter(d => d.value > 0) : [];
 
     if (loading) {
         return (
@@ -142,9 +183,9 @@ export default function AnalyticsPage() {
                             <p className="text-xs text-muted-foreground">days</p>
                         </Card>
                         <Card className="p-4 border-border/50">
-                            <p className="text-sm text-muted-foreground">Total Problems</p>
+                            <p className="text-sm text-muted-foreground">Total Solved</p>
                             <p className="text-3xl font-bold text-primary">{totalProblems}</p>
-                            <p className="text-xs text-muted-foreground">in {timeRange} days</p>
+                            <p className="text-xs text-muted-foreground">all-time</p>
                         </Card>
                         <Card className="p-4 border-border/50">
                             <p className="text-sm text-muted-foreground">Active Goals</p>
@@ -153,11 +194,39 @@ export default function AnalyticsPage() {
                         </Card>
                     </div>
 
+                    {/* Platform Stats */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        {leetcodeData && (
+                            <Card className="p-4 border-border/50 bg-gradient-to-r from-yellow-500/10 to-transparent">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="text-2xl">🟡</span>
+                                    <h3 className="font-semibold text-foreground">LeetCode</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-foreground">{leetcodeData.totalSolved} solved</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Easy: {leetcodeData.easySolved} • Medium: {leetcodeData.mediumSolved} • Hard: {leetcodeData.hardSolved}
+                                </p>
+                            </Card>
+                        )}
+                        {codeforcesData && (
+                            <Card className="p-4 border-border/50 bg-gradient-to-r from-blue-500/10 to-transparent">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <span className="text-2xl">🔵</span>
+                                    <h3 className="font-semibold text-foreground">Codeforces</h3>
+                                </div>
+                                <p className="text-2xl font-bold text-foreground">{codeforcesData.totalSolved} solved</p>
+                                <p className="text-sm text-muted-foreground">
+                                    Rating: {codeforcesData.user?.rating || 'Unrated'}
+                                </p>
+                            </Card>
+                        )}
+                    </div>
+
                     {/* Charts Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                         {/* Problems Solved Chart */}
                         <Card className="p-6 border-border/50">
-                            <h3 className="font-semibold text-foreground mb-4">Problems Solved</h3>
+                            <h3 className="font-semibold text-foreground mb-4">Daily Activity</h3>
                             {chartData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height={250}>
                                     <BarChart data={chartData}>
@@ -173,7 +242,10 @@ export default function AnalyticsPage() {
                                     </BarChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <p className="text-muted-foreground text-center py-12">No data yet. Start solving problems!</p>
+                                <div className="text-center py-12">
+                                    <p className="text-muted-foreground mb-2">No daily activity data yet</p>
+                                    <p className="text-xs text-muted-foreground">Visit your dashboard each day to track progress</p>
+                                </div>
                             )}
                         </Card>
 
@@ -194,7 +266,10 @@ export default function AnalyticsPage() {
                                     </LineChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <p className="text-muted-foreground text-center py-12">No rating data available</p>
+                                <div className="text-center py-12">
+                                    <p className="text-muted-foreground mb-2">No rating history yet</p>
+                                    <p className="text-xs text-muted-foreground">Rating will be tracked as you visit the dashboard</p>
+                                </div>
                             )}
                         </Card>
                     </div>
@@ -275,41 +350,48 @@ export default function AnalyticsPage() {
                             )}
                         </Card>
 
-                        {/* Difficulty Distribution */}
+                        {/* Difficulty Distribution - REAL DATA */}
                         <Card className="p-6 border-border/50">
-                            <h3 className="font-semibold text-foreground mb-4">Difficulty Distribution</h3>
+                            <h3 className="font-semibold text-foreground mb-4">LeetCode Difficulty</h3>
                             {difficultyData.length > 0 ? (
-                                <div className="flex items-center justify-center">
-                                    <ResponsiveContainer width="100%" height={200}>
-                                        <PieChart>
-                                            <Pie
-                                                data={difficultyData}
-                                                cx="50%"
-                                                cy="50%"
-                                                innerRadius={60}
-                                                outerRadius={80}
-                                                paddingAngle={5}
-                                                dataKey="value"
-                                            >
-                                                {difficultyData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            ) : (
-                                <p className="text-muted-foreground text-center py-12">No data available</p>
-                            )}
-                            <div className="flex justify-center gap-6 mt-4">
-                                {difficultyData.map((entry, index) => (
-                                    <div key={entry.name} className="flex items-center gap-2">
-                                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }} />
-                                        <span className="text-sm text-muted-foreground">{entry.name}: {entry.value}</span>
+                                <>
+                                    <div className="flex items-center justify-center">
+                                        <ResponsiveContainer width="100%" height={200}>
+                                            <PieChart>
+                                                <Pie
+                                                    data={difficultyData}
+                                                    cx="50%"
+                                                    cy="50%"
+                                                    innerRadius={60}
+                                                    outerRadius={80}
+                                                    paddingAngle={5}
+                                                    dataKey="value"
+                                                >
+                                                    {difficultyData.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                                                    ))}
+                                                </Pie>
+                                                <Tooltip />
+                                            </PieChart>
+                                        </ResponsiveContainer>
                                     </div>
-                                ))}
-                            </div>
+                                    <div className="flex justify-center gap-6 mt-4">
+                                        {difficultyData.map((entry, index) => (
+                                            <div key={entry.name} className="flex items-center gap-2">
+                                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }} />
+                                                <span className="text-sm text-muted-foreground">{entry.name}: {entry.value}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <p className="text-muted-foreground mb-2">Connect LeetCode to see difficulty breakdown</p>
+                                    <Button variant="outline" size="sm" onClick={() => router.push('/dashboard')}>
+                                        Go to Dashboard
+                                    </Button>
+                                </div>
+                            )}
                         </Card>
                     </div>
                 </div>
