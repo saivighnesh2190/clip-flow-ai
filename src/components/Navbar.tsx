@@ -17,6 +17,7 @@ const publicNavLinks = [
 // Navigation links for authenticated users
 const authNavLinks = [
   { label: "Dashboard", href: "/dashboard" },
+  { label: "Analytics", href: "/analytics" },
   { label: "Profile", href: "/profile" },
   { label: "Contact", href: "/contact" },
 ];

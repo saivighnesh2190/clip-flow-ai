@@ -8,6 +8,7 @@ import StatsOverview from "@/components/StatsOverview";
 import AIInsights from "@/components/AIInsights";
 import AIChat from "@/components/AIChat";
 import { getConnectedPlatforms, connectPlatform, disconnectPlatform } from "@/lib/profile";
+import { saveDailyStats } from "@/lib/stats";
 
 interface PlatformStats {
     [key: string]: unknown;
@@ -71,6 +72,16 @@ export default function DashboardPage() {
 
         setStats(newStats);
         setLoading(false);
+
+        // Auto-save daily stats to database for analytics
+        const leetcodeData = newStats.leetcode as typeof newStats.leetcode;
+        const codeforcesData = newStats.codeforces as typeof newStats.codeforces;
+        saveDailyStats({
+            leetcode_solved: leetcodeData?.totalSolved || 0,
+            leetcode_rating: leetcodeData?.user?.ranking || undefined,
+            codeforces_solved: codeforcesData?.totalSolved || 0,
+            codeforces_rating: codeforcesData?.user?.rating || undefined,
+        });
     }, [connectedPlatforms]);
 
     useEffect(() => {
