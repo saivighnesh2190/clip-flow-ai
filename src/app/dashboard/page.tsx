@@ -7,6 +7,7 @@ import PlatformConnection from "@/components/PlatformConnection";
 import StatsOverview from "@/components/StatsOverview";
 import AIInsights from "@/components/AIInsights";
 import AIChat from "@/components/AIChat";
+import { getConnectedPlatforms, connectPlatform, disconnectPlatform } from "@/lib/profile";
 
 interface PlatformStats {
     [key: string]: unknown;
@@ -24,34 +25,28 @@ interface PlatformStats {
     };
 }
 
-const STORAGE_KEY = "clipflow_connected_platforms";
-
 export default function DashboardPage() {
     const [connectedPlatforms, setConnectedPlatforms] = useState<{ platform: string; username: string }[]>([]);
     const [stats, setStats] = useState<PlatformStats>({});
     const [loading, setLoading] = useState(false);
     const [initialized, setInitialized] = useState(false);
+    const [loadingPlatforms, setLoadingPlatforms] = useState(true);
 
-    // Load from localStorage on mount
+    // Load connected platforms from database on mount
     useEffect(() => {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
+        const loadPlatforms = async () => {
             try {
-                const parsed = JSON.parse(saved);
-                setConnectedPlatforms(parsed);
-            } catch {
-                console.error("Failed to parse saved platforms");
+                const platforms = await getConnectedPlatforms();
+                setConnectedPlatforms(platforms);
+            } catch (error) {
+                console.error("Failed to load platforms:", error);
+            } finally {
+                setLoadingPlatforms(false);
+                setInitialized(true);
             }
-        }
-        setInitialized(true);
+        };
+        loadPlatforms();
     }, []);
-
-    // Save to localStorage when platforms change
-    useEffect(() => {
-        if (initialized) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(connectedPlatforms));
-        }
-    }, [connectedPlatforms, initialized]);
 
     const fetchStats = useCallback(async () => {
         if (connectedPlatforms.length === 0) {
@@ -79,22 +74,30 @@ export default function DashboardPage() {
     }, [connectedPlatforms]);
 
     useEffect(() => {
-        if (initialized) {
+        if (initialized && connectedPlatforms.length > 0) {
             fetchStats();
         }
     }, [connectedPlatforms, initialized, fetchStats]);
 
-    const handleConnect = (platform: string, username: string) => {
-        setConnectedPlatforms((prev) => [...prev, { platform, username }]);
+    const handleConnect = async (platform: string, username: string) => {
+        // Save to database
+        const success = await connectPlatform(platform, username);
+        if (success) {
+            setConnectedPlatforms((prev) => [...prev, { platform, username }]);
+        }
     };
 
-    const handleDisconnect = (platform: string) => {
-        setConnectedPlatforms((prev) => prev.filter((p) => p.platform !== platform));
-        setStats((prev) => {
-            const newStats = { ...prev };
-            delete newStats[platform];
-            return newStats;
-        });
+    const handleDisconnect = async (platform: string) => {
+        // Remove from database
+        const success = await disconnectPlatform(platform);
+        if (success) {
+            setConnectedPlatforms((prev) => prev.filter((p) => p.platform !== platform));
+            setStats((prev) => {
+                const newStats = { ...prev };
+                delete newStats[platform];
+                return newStats;
+            });
+        }
     };
 
     return (
@@ -116,11 +119,21 @@ export default function DashboardPage() {
                     {/* Platform Connection */}
                     <div className="mb-8">
                         <h2 className="text-lg font-semibold text-foreground mb-4">Connect Platforms</h2>
-                        <PlatformConnection
-                            onConnect={handleConnect}
-                            onDisconnect={handleDisconnect}
-                            connectedPlatforms={connectedPlatforms}
-                        />
+                        {loadingPlatforms ? (
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                </svg>
+                                <span>Loading your connected accounts...</span>
+                            </div>
+                        ) : (
+                            <PlatformConnection
+                                onConnect={handleConnect}
+                                onDisconnect={handleDisconnect}
+                                connectedPlatforms={connectedPlatforms}
+                            />
+                        )}
                     </div>
 
                     {/* Main Grid */}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
+import { checkRateLimit, getRateLimitHeaders, rateLimitExceededResponse } from "@/lib/rate-limit";
 
 interface PlatformStats {
     codeforces?: {
@@ -148,31 +149,43 @@ Return ONLY valid JSON in this exact format:
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { action, message, stats, history, apiKey } = body;
+        const { action, message, stats, history, apiKey, userId } = body;
 
         if (!apiKey) {
             return NextResponse.json({ error: "API key required" }, { status: 401 });
         }
 
+        // Rate limiting: 20 requests per hour per user
+        const rateLimitKey = userId || request.headers.get("x-forwarded-for") || "anonymous";
+        const rateLimitResult = checkRateLimit(`ai:${rateLimitKey}`, {
+            maxRequests: 20,
+            windowMs: 60 * 60 * 1000, // 1 hour
+        });
+
+        if (!rateLimitResult.allowed) {
+            return rateLimitExceededResponse();
+        }
+
         const ai = new GoogleGenAI({ apiKey });
+        const headers = getRateLimitHeaders(rateLimitResult);
 
         let result;
         switch (action) {
             case "chat":
                 result = await chatWithAI(ai, message, stats as PlatformStats, history || []);
-                return NextResponse.json({ success: true, response: result });
+                return NextResponse.json({ success: true, response: result }, { headers });
 
             case "quick_insight":
                 result = await getQuickInsight(ai, stats as PlatformStats);
-                return NextResponse.json({ success: true, insight: result });
+                return NextResponse.json({ success: true, insight: result }, { headers });
 
             case "detailed_analysis":
                 result = await getDetailedAnalysis(ai, stats as PlatformStats);
-                return NextResponse.json({ success: true, analysis: result });
+                return NextResponse.json({ success: true, analysis: result }, { headers });
 
             case "daily_recommendation":
                 result = await getDailyRecommendation(ai, stats as PlatformStats);
-                return NextResponse.json({ success: true, recommendation: result });
+                return NextResponse.json({ success: true, recommendation: result }, { headers });
 
             default:
                 return NextResponse.json({ error: "Invalid action" }, { status: 400 });

@@ -8,8 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-
-const GEMINI_KEY_STORAGE = "clipflow_gemini_api_key";
+import { saveGeminiApiKey, getGeminiApiKey, removeGeminiApiKey } from "@/lib/profile";
 
 export default function ProfilePage() {
     const [user, setUser] = useState<User | null>(null);
@@ -21,27 +20,29 @@ export default function ProfilePage() {
     const [savedGeminiKey, setSavedGeminiKey] = useState("");
     const [showApiKey, setShowApiKey] = useState(false);
     const [apiKeyMessage, setApiKeyMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+    const [savingKey, setSavingKey] = useState(false);
     const router = useRouter();
     const supabase = createClient();
 
     useEffect(() => {
-        const getUser = async () => {
+        const initialize = async () => {
             const { data: { user }, error } = await supabase.auth.getUser();
             if (error || !user) {
                 router.push("/login");
                 return;
             }
             setUser(user);
+
+            // Load saved API key from database
+            const savedKey = await getGeminiApiKey();
+            if (savedKey) {
+                setSavedGeminiKey(savedKey);
+                setGeminiKey(savedKey);
+            }
+
             setLoading(false);
         };
-        getUser();
-
-        // Load saved API key
-        const savedKey = localStorage.getItem(GEMINI_KEY_STORAGE);
-        if (savedKey) {
-            setSavedGeminiKey(savedKey);
-            setGeminiKey(savedKey);
-        }
+        initialize();
     }, [supabase.auth, router]);
 
     const handlePasswordChange = async (e: React.FormEvent) => {
@@ -72,7 +73,7 @@ export default function ProfilePage() {
         setUpdating(false);
     };
 
-    const handleSaveApiKey = () => {
+    const handleSaveApiKey = async () => {
         if (!geminiKey.trim()) {
             setApiKeyMessage({ type: "error", text: "Please enter an API key" });
             return;
@@ -81,17 +82,32 @@ export default function ProfilePage() {
             setApiKeyMessage({ type: "error", text: "Invalid API key format. Gemini API keys start with 'AIza'" });
             return;
         }
-        localStorage.setItem(GEMINI_KEY_STORAGE, geminiKey.trim());
-        setSavedGeminiKey(geminiKey.trim());
-        setApiKeyMessage({ type: "success", text: "API key saved successfully!" });
-        setShowApiKey(false);
+
+        setSavingKey(true);
+        const success = await saveGeminiApiKey(geminiKey.trim());
+
+        if (success) {
+            setSavedGeminiKey(geminiKey.trim());
+            setApiKeyMessage({ type: "success", text: "API key saved securely to database!" });
+            setShowApiKey(false);
+        } else {
+            setApiKeyMessage({ type: "error", text: "Failed to save API key. Please try again." });
+        }
+        setSavingKey(false);
     };
 
-    const handleRemoveApiKey = () => {
-        localStorage.removeItem(GEMINI_KEY_STORAGE);
-        setGeminiKey("");
-        setSavedGeminiKey("");
-        setApiKeyMessage({ type: "success", text: "API key removed" });
+    const handleRemoveApiKey = async () => {
+        setSavingKey(true);
+        const success = await removeGeminiApiKey();
+
+        if (success) {
+            setGeminiKey("");
+            setSavedGeminiKey("");
+            setApiKeyMessage({ type: "success", text: "API key removed" });
+        } else {
+            setApiKeyMessage({ type: "error", text: "Failed to remove API key" });
+        }
+        setSavingKey(false);
     };
 
     const handleSignOut = async () => {
@@ -167,15 +183,15 @@ export default function ProfilePage() {
                             </div>
                             <div>
                                 <h3 className="font-semibold text-foreground">Gemini API Key</h3>
-                                <p className="text-xs text-muted-foreground">Required for AI Chat & Insights</p>
+                                <p className="text-xs text-muted-foreground">Required for AI Chat & Insights (Stored encrypted)</p>
                             </div>
                         </div>
 
                         {apiKeyMessage && (
                             <div
                                 className={`mb-4 p-3 rounded-lg text-sm ${apiKeyMessage.type === "success"
-                                        ? "bg-green-100 border border-green-200 text-green-700"
-                                        : "bg-red-100 border border-red-200 text-red-700"
+                                    ? "bg-green-100 border border-green-200 text-green-700"
+                                    : "bg-red-100 border border-red-200 text-red-700"
                                     }`}
                             >
                                 {apiKeyMessage.text}
@@ -188,17 +204,17 @@ export default function ProfilePage() {
                                     <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
-                                    <span className="text-sm text-green-700">API Key configured</span>
+                                    <span className="text-sm text-green-700">API Key configured (encrypted)</span>
                                     <span className="text-xs text-green-600 font-mono ml-auto">
                                         {savedGeminiKey.slice(0, 8)}...{savedGeminiKey.slice(-4)}
                                     </span>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button variant="outline" size="sm" onClick={() => setShowApiKey(!showApiKey)}>
+                                    <Button variant="outline" size="sm" onClick={() => setShowApiKey(!showApiKey)} disabled={savingKey}>
                                         {showApiKey ? "Hide" : "Update"} Key
                                     </Button>
-                                    <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600" onClick={handleRemoveApiKey}>
-                                        Remove
+                                    <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600" onClick={handleRemoveApiKey} disabled={savingKey}>
+                                        {savingKey ? "..." : "Remove"}
                                     </Button>
                                 </div>
                             </div>
@@ -233,7 +249,9 @@ export default function ProfilePage() {
                                         placeholder="AIza..."
                                     />
                                 </div>
-                                <Button onClick={handleSaveApiKey}>Save API Key</Button>
+                                <Button onClick={handleSaveApiKey} disabled={savingKey}>
+                                    {savingKey ? "Saving..." : "Save API Key"}
+                                </Button>
                             </div>
                         )}
                     </Card>
@@ -245,8 +263,8 @@ export default function ProfilePage() {
                         {message && (
                             <div
                                 className={`mb-4 p-3 rounded-lg text-sm ${message.type === "success"
-                                        ? "bg-green-100 border border-green-200 text-green-700"
-                                        : "bg-red-100 border border-red-200 text-red-700"
+                                    ? "bg-green-100 border border-green-200 text-green-700"
+                                    : "bg-red-100 border border-red-200 text-red-700"
                                     }`}
                             >
                                 {message.text}
