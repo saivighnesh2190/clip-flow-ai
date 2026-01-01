@@ -22,7 +22,12 @@ interface PlatformStats {
         easySolved: number;
         mediumSolved: number;
         hardSolved: number;
-        user?: { ranking: number };
+        user?: {
+            ranking: number;
+            contestRating?: number;
+            contestGlobalRank?: number;
+            contestAttended?: number;
+        };
     };
     codeforces?: {
         totalSolved: number;
@@ -201,10 +206,18 @@ export default function AnalyticsPage() {
                                 <div className="flex items-center gap-3 mb-2">
                                     <span className="text-2xl">🟡</span>
                                     <h3 className="font-semibold text-foreground">LeetCode</h3>
+                                    {leetcodeData.user?.contestRating && leetcodeData.user.contestRating > 0 && (
+                                        <span className="ml-auto px-2 py-1 bg-yellow-500/20 rounded-full text-sm font-bold text-yellow-500">
+                                            Rating: {leetcodeData.user.contestRating}
+                                        </span>
+                                    )}
                                 </div>
                                 <p className="text-2xl font-bold text-foreground">{leetcodeData.totalSolved} solved</p>
                                 <p className="text-sm text-muted-foreground">
                                     Easy: {leetcodeData.easySolved} • Medium: {leetcodeData.mediumSolved} • Hard: {leetcodeData.hardSolved}
+                                    {leetcodeData.user?.contestAttended && leetcodeData.user.contestAttended > 0 && (
+                                        <span> • {leetcodeData.user.contestAttended} contests</span>
+                                    )}
                                 </p>
                             </Card>
                         )}
