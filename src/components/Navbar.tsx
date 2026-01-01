@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -111,6 +112,7 @@ export default function Navbar() {
                 </Button>
               </>
             )}
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
