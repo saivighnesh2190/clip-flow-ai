@@ -4,12 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getGeminiApiKey } from "@/lib/profile";
 
 interface AIInsightsProps {
     stats: Record<string, unknown>;
 }
-
-const GEMINI_KEY_STORAGE = "clipflow_gemini_api_key";
 
 export default function AIInsights({ stats }: AIInsightsProps) {
     const [quickInsight, setQuickInsight] = useState<string>("");
@@ -26,19 +25,31 @@ export default function AIInsights({ stats }: AIInsightsProps) {
     });
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [hasApiKey, setHasApiKey] = useState(false);
+    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [checkingKey, setCheckingKey] = useState(true);
 
     const hasStats = Object.keys(stats).length > 0;
 
     useEffect(() => {
-        const savedKey = localStorage.getItem(GEMINI_KEY_STORAGE);
-        setHasApiKey(!!savedKey);
+        const loadApiKey = async () => {
+            try {
+                const key = await getGeminiApiKey();
+                setApiKey(key);
+                setHasApiKey(!!key);
+            } catch (error) {
+                console.error("Error loading API key:", error);
+                setHasApiKey(false);
+            } finally {
+                setCheckingKey(false);
+            }
+        };
+        loadApiKey();
     }, []);
 
     const fetchQuickInsight = useCallback(async () => {
-        if (!hasStats || !hasApiKey) return;
+        if (!hasStats || !apiKey) return;
         setLoading((prev) => ({ ...prev, insight: true }));
         try {
-            const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
             const response = await fetch("/api/ai", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -51,13 +62,12 @@ export default function AIInsights({ stats }: AIInsightsProps) {
         } finally {
             setLoading((prev) => ({ ...prev, insight: false }));
         }
-    }, [stats, hasStats, hasApiKey]);
+    }, [stats, hasStats, apiKey]);
 
     const fetchRecommendation = useCallback(async () => {
-        if (!hasStats || !hasApiKey) return;
+        if (!hasStats || !apiKey) return;
         setLoading((prev) => ({ ...prev, recommendation: true }));
         try {
-            const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
             const response = await fetch("/api/ai", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -70,14 +80,13 @@ export default function AIInsights({ stats }: AIInsightsProps) {
         } finally {
             setLoading((prev) => ({ ...prev, recommendation: false }));
         }
-    }, [stats, hasStats, hasApiKey]);
+    }, [stats, hasStats, apiKey]);
 
     const fetchDetailedAnalysis = async () => {
-        if (!hasStats || !hasApiKey) return;
+        if (!hasStats || !apiKey) return;
         setLoading((prev) => ({ ...prev, analysis: true }));
         setShowAnalysis(true);
         try {
-            const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
             const response = await fetch("/api/ai", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -93,11 +102,26 @@ export default function AIInsights({ stats }: AIInsightsProps) {
     };
 
     useEffect(() => {
-        if (hasStats && hasApiKey) {
+        if (hasStats && apiKey) {
             fetchQuickInsight();
             fetchRecommendation();
         }
-    }, [hasStats, hasApiKey, fetchQuickInsight, fetchRecommendation]);
+    }, [hasStats, apiKey, fetchQuickInsight, fetchRecommendation]);
+
+    // Show loading state while checking for API key
+    if (checkingKey) {
+        return (
+            <Card className="p-6 border-border/50">
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span>Loading...</span>
+                </div>
+            </Card>
+        );
+    }
 
     // Show API key setup prompt
     if (!hasApiKey) {

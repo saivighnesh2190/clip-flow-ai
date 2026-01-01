@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getGeminiApiKey } from "@/lib/profile";
 
 interface Message {
     role: "user" | "assistant";
@@ -13,8 +14,6 @@ interface Message {
 interface AIChatProps {
     stats: Record<string, unknown>;
 }
-
-const GEMINI_KEY_STORAGE = "clipflow_gemini_api_key";
 
 export default function AIChat({ stats }: AIChatProps) {
     const [messages, setMessages] = useState<Message[]>([
@@ -26,11 +25,24 @@ export default function AIChat({ stats }: AIChatProps) {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [hasApiKey, setHasApiKey] = useState(false);
+    const [apiKey, setApiKey] = useState<string | null>(null);
+    const [checkingKey, setCheckingKey] = useState(true);
     const messagesContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const savedKey = localStorage.getItem(GEMINI_KEY_STORAGE);
-        setHasApiKey(!!savedKey);
+        const loadApiKey = async () => {
+            try {
+                const key = await getGeminiApiKey();
+                setApiKey(key);
+                setHasApiKey(!!key);
+            } catch (error) {
+                console.error("Error loading API key:", error);
+                setHasApiKey(false);
+            } finally {
+                setCheckingKey(false);
+            }
+        };
+        loadApiKey();
     }, []);
 
     // Scroll only within the messages container
@@ -41,7 +53,7 @@ export default function AIChat({ stats }: AIChatProps) {
     }, [messages]);
 
     const sendMessage = async () => {
-        if (!input.trim() || isLoading) return;
+        if (!input.trim() || isLoading || !apiKey) return;
 
         const userMessage = input.trim();
         setInput("");
@@ -49,7 +61,6 @@ export default function AIChat({ stats }: AIChatProps) {
         setIsLoading(true);
 
         try {
-            const apiKey = localStorage.getItem(GEMINI_KEY_STORAGE);
             const response = await fetch("/api/ai", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -83,6 +94,21 @@ export default function AIChat({ stats }: AIChatProps) {
             sendMessage();
         }
     };
+
+    // Show loading state while checking for API key
+    if (checkingKey) {
+        return (
+            <Card className="p-6 border-border/50">
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span>Loading AI...</span>
+                </div>
+            </Card>
+        );
+    }
 
     // Show API key setup prompt if no key
     if (!hasApiKey) {
@@ -141,8 +167,8 @@ export default function AIChat({ stats }: AIChatProps) {
                     >
                         <div
                             className={`max-w-[80%] rounded-2xl px-4 py-2 ${msg.role === "user"
-                                    ? "bg-primary text-primary-foreground"
-                                    : "bg-muted text-foreground"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-muted text-foreground"
                                 }`}
                         >
                             <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
