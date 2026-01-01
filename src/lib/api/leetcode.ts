@@ -7,6 +7,9 @@ export interface LeetCodeUser {
     avatar: string;
     ranking: number;
     reputation: number;
+    contestRating: number;
+    contestGlobalRank: number;
+    contestAttended: number;
 }
 
 export interface LeetCodeStats {
@@ -28,6 +31,7 @@ export interface LeetCodeStats {
 const LEETCODE_GRAPHQL = "https://leetcode.com/graphql";
 
 export async function fetchLeetCodeUser(username: string): Promise<LeetCodeStats | null> {
+    // Query for user profile and stats
     const query = `
     query userPublicProfile($username: String!) {
       matchedUser(username: $username) {
@@ -45,6 +49,12 @@ export async function fetchLeetCodeUser(username: string): Promise<LeetCodeStats
           }
         }
         submissionCalendar
+      }
+      userContestRanking(username: $username) {
+        attendedContestsCount
+        rating
+        globalRanking
+        topPercentage
       }
       recentAcSubmissionList(username: $username, limit: 20) {
         title
@@ -70,6 +80,7 @@ export async function fetchLeetCodeUser(username: string): Promise<LeetCodeStats
 
         if (data.data?.matchedUser) {
             const user = data.data.matchedUser;
+            const contestRanking = data.data.userContestRanking;
             const stats = user.submitStats?.acSubmissionNum || [];
 
             const easySolved = stats.find((s: { difficulty: string }) => s.difficulty === "Easy")?.count || 0;
@@ -84,12 +95,16 @@ export async function fetchLeetCodeUser(username: string): Promise<LeetCodeStats
                     avatar: user.profile?.userAvatar || "",
                     ranking: user.profile?.ranking || 0,
                     reputation: user.profile?.reputation || 0,
+                    // Contest rating data
+                    contestRating: contestRanking?.rating ? Math.round(contestRanking.rating) : 0,
+                    contestGlobalRank: contestRanking?.globalRanking || 0,
+                    contestAttended: contestRanking?.attendedContestsCount || 0,
                 },
                 totalSolved,
                 easySolved,
                 mediumSolved,
                 hardSolved,
-                acceptanceRate: 0, // Would need additional query
+                acceptanceRate: 0,
                 submissionCalendar: user.submissionCalendar ? JSON.parse(user.submissionCalendar) : {},
                 recentSubmissions: data.data.recentAcSubmissionList || [],
                 topicProgress: [],

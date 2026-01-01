@@ -10,7 +10,12 @@ interface StatsOverviewProps {
             problemsByTag?: Record<string, number>;
         };
         leetcode?: {
-            user?: { ranking: number };
+            user?: {
+                ranking: number;
+                contestRating?: number;
+                contestGlobalRank?: number;
+                contestAttended?: number;
+            };
             totalSolved: number;
             easySolved: number;
             mediumSolved: number;
@@ -50,7 +55,7 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
 
                 {stats.codeforces?.user && (
                     <Card className="p-4 border-border/50">
-                        <p className="text-sm text-muted-foreground">Codeforces</p>
+                        <p className="text-sm text-muted-foreground">Codeforces Rating</p>
                         <p className="text-2xl font-bold text-blue-500">{stats.codeforces.user.rating}</p>
                         <p className="text-xs text-muted-foreground capitalize">
                             {stats.codeforces.user.rank} • {stats.codeforces.totalSolved} solved
@@ -61,13 +66,47 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
                 {stats.leetcode && (
                     <Card className="p-4 border-border/50">
                         <p className="text-sm text-muted-foreground">LeetCode</p>
-                        <p className="text-2xl font-bold text-yellow-500">
-                            #{stats.leetcode.user?.ranking ? stats.leetcode.user.ranking.toLocaleString() : "N/A"}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{stats.leetcode.totalSolved} problems solved</p>
+                        {stats.leetcode.user?.contestRating && stats.leetcode.user.contestRating > 0 ? (
+                            <>
+                                <p className="text-2xl font-bold text-yellow-500">
+                                    {stats.leetcode.user.contestRating}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                    Contest Rating • #{stats.leetcode.user.contestGlobalRank?.toLocaleString() || 'N/A'}
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <p className="text-2xl font-bold text-yellow-500">
+                                    #{stats.leetcode.user?.ranking ? stats.leetcode.user.ranking.toLocaleString() : "N/A"}
+                                </p>
+                                <p className="text-xs text-muted-foreground">{stats.leetcode.totalSolved} problems solved</p>
+                            </>
+                        )}
                     </Card>
                 )}
             </div>
+
+            {/* LeetCode Contest Stats (if participated) */}
+            {stats.leetcode?.user?.contestAttended && stats.leetcode.user.contestAttended > 0 && (
+                <Card className="p-4 border-border/50 bg-gradient-to-r from-yellow-500/10 to-transparent">
+                    <h4 className="font-semibold text-foreground mb-3">LeetCode Contest Stats</h4>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-yellow-500">{stats.leetcode.user.contestRating || 0}</p>
+                            <p className="text-xs text-muted-foreground">Contest Rating</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-foreground">#{stats.leetcode.user.contestGlobalRank?.toLocaleString() || 'N/A'}</p>
+                            <p className="text-xs text-muted-foreground">Global Rank</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="text-2xl font-bold text-foreground">{stats.leetcode.user.contestAttended}</p>
+                            <p className="text-xs text-muted-foreground">Contests</p>
+                        </div>
+                    </div>
+                </Card>
+            )}
 
             {/* LeetCode Difficulty Breakdown */}
             {stats.leetcode && (
@@ -78,40 +117,39 @@ export default function StatsOverview({ stats }: StatsOverviewProps) {
                             <div className="w-16 h-16 mx-auto rounded-full bg-green-500/20 flex items-center justify-center mb-2">
                                 <span className="text-2xl font-bold text-green-500">{stats.leetcode.easySolved}</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">Easy</p>
+                            <p className="text-xs text-muted-foreground">Easy</p>
                         </div>
                         <div className="text-center">
                             <div className="w-16 h-16 mx-auto rounded-full bg-yellow-500/20 flex items-center justify-center mb-2">
                                 <span className="text-2xl font-bold text-yellow-500">{stats.leetcode.mediumSolved}</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">Medium</p>
+                            <p className="text-xs text-muted-foreground">Medium</p>
                         </div>
                         <div className="text-center">
                             <div className="w-16 h-16 mx-auto rounded-full bg-red-500/20 flex items-center justify-center mb-2">
                                 <span className="text-2xl font-bold text-red-500">{stats.leetcode.hardSolved}</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">Hard</p>
+                            <p className="text-xs text-muted-foreground">Hard</p>
                         </div>
                     </div>
                 </Card>
             )}
 
-            {/* Codeforces Topics */}
+            {/* Codeforces Tags */}
             {stats.codeforces?.problemsByTag && Object.keys(stats.codeforces.problemsByTag).length > 0 && (
                 <Card className="p-4 border-border/50">
                     <h4 className="font-semibold text-foreground mb-4">Codeforces Topics</h4>
                     <div className="flex flex-wrap gap-2">
                         {Object.entries(stats.codeforces.problemsByTag)
-                            .sort((a, b) => b[1] - a[1])
-                            .slice(0, 12)
+                            .sort(([, a], [, b]) => b - a)
+                            .slice(0, 10)
                             .map(([tag, count]) => (
-                                <div
+                                <span
                                     key={tag}
-                                    className="px-3 py-1 rounded-full bg-muted text-sm text-foreground flex items-center gap-1"
+                                    className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs"
                                 >
-                                    <span>{tag}</span>
-                                    <span className="text-xs text-muted-foreground">({count})</span>
-                                </div>
+                                    {tag}: {count}
+                                </span>
                             ))}
                     </div>
                 </Card>
