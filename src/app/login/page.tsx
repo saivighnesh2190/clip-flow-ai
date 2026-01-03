@@ -20,7 +20,7 @@ export default function LoginPage() {
         setIsLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
         });
@@ -29,7 +29,11 @@ export default function LoginPage() {
             setError(error.message);
             setIsLoading(false);
         } else {
-            router.push("/dashboard");
+            // Check if user is admin
+            const adminEmails = ["nsv2190@gmail.com", "nsaivighnesh@zohomail.in"];
+            const isAdmin = adminEmails.includes(data.user?.email || "");
+
+            router.push(isAdmin ? "/admin" : "/dashboard");
             router.refresh();
         }
     };

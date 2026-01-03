@@ -52,20 +52,16 @@ export default function AdminPage() {
 
         setIsAdmin(true);
 
-        // Fetch stats
-        const { data: profiles, error } = await supabase
-            .from("profiles")
-            .select("*")
-            .order("created_at", { ascending: false });
-
-        if (profiles && !error) {
-            setUsers(profiles);
-            setStats({
-                total_users: profiles.length,
-                users_with_leetcode: profiles.filter(p => p.leetcode_username).length,
-                users_with_codeforces: profiles.filter(p => p.codeforces_username).length,
-                users_with_api_key: profiles.filter(p => p.gemini_api_key_encrypted).length,
-            });
+        // Fetch stats from admin API (bypasses RLS)
+        try {
+            const response = await fetch("/api/admin");
+            if (response.ok) {
+                const data = await response.json();
+                setStats(data.stats);
+                setUsers(data.users);
+            }
+        } catch (error) {
+            console.error("Error fetching admin data:", error);
         }
 
         setLoading(false);
