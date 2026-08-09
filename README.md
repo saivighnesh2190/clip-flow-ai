@@ -5,7 +5,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-Database-green)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 
-**Live Demo:** [https://project-taupe-eight-26.vercel.app](https://project-taupe-eight-26.vercel.app)
+**Live Demo:** [https://clipflowai.vercel.app](https://clipflowai.vercel.app)
 
 Track your DSA progress across LeetCode and Codeforces with AI-powered insights, goal tracking, and detailed analytics.
 
@@ -19,7 +19,12 @@ Track your DSA progress across LeetCode and Codeforces with AI-powered insights,
 - 🎯 **Goal Setting** - Daily, weekly, and rating goals
 - 🌓 **Dark/Light Mode** - Toggle theme preference
 - 🛡️ **Admin Dashboard** - User management (admin only)
-- 💳 **Pricing Tiers** - Free, Pro, Team plans
+- 💳 **Pricing Page** - Free / Pro / Team tiers are displayed as a roadmap; billing is **not** integrated
+
+> **Project status:** ClipFlow is an independent student project under active development.
+> LeetCode and Codeforces integrations work; CodeChef is partially implemented and disabled in the UI.
+> Team/leaderboard features and payment processing are not implemented. Marketing copy on the site
+> describes only what is actually built.
 
 ---
 

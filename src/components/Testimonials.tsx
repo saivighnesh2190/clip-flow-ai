@@ -1,121 +1,84 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const testimonials = [
+const useCases = [
     {
-        name: "Priya Sharma",
-        role: "Software Engineer at Google",
-        avatar: "PS",
-        rating: 5,
-        quote: "ClipFlow completely transformed my interview prep. The AI insights helped me identify weak areas I didn't even know I had. Landed my dream job!",
+        title: "Interview preparation",
+        icon: "🎯",
+        description:
+            "Pull your LeetCode and Codeforces history into one dashboard so you can see which topics you have actually covered before an interview loop.",
         platform: "LeetCode",
     },
     {
-        name: "Alex Chen",
-        role: "CS Student at Stanford",
-        avatar: "AC",
-        rating: 5,
-        quote: "Tracking my progress across LeetCode and Codeforces in one place is a game-changer. The daily goals keep me consistent and motivated.",
+        title: "Finding weak topics",
+        icon: "🔍",
+        description:
+            "The Gemini-powered assistant reads your solved-problem breakdown and points out topics you are under-practicing, such as graphs or DP.",
+        platform: "AI Insights",
+    },
+    {
+        title: "Staying consistent",
+        icon: "🔥",
+        description:
+            "Daily streaks and goal targets turn scattered practice into a habit you can measure week over week instead of guessing.",
+        platform: "Goals",
+    },
+    {
+        title: "Contest rating tracking",
+        icon: "📈",
+        description:
+            "Rating history from Codeforces is charted over time, so contest performance trends are visible instead of buried in profile pages.",
         platform: "Codeforces",
     },
     {
-        name: "Rahul Patel",
-        role: "Backend Developer at Amazon",
-        avatar: "RP",
-        rating: 5,
-        quote: "As someone preparing for system design interviews, the analytical insights from ClipFlow are invaluable. Highly recommend for serious coders.",
-        platform: "CodeChef",
+        title: "One dashboard, no spreadsheets",
+        icon: "📊",
+        description:
+            "Replace the manual progress spreadsheet with an automatic sync that pulls public profile data from each platform.",
+        platform: "Dashboard",
     },
     {
-        name: "Sarah Johnson",
-        role: "Data Scientist at Meta",
-        avatar: "SJ",
-        rating: 5,
-        quote: "The time tracking feature helped me realize I was spending too much time on easy problems. Now I focus on what matters most.",
-        platform: "LeetCode",
-    },
-    {
-        name: "Mike Williams",
-        role: "Full Stack Developer",
-        avatar: "MW",
-        rating: 5,
-        quote: "Finally, a tool that understands competitive programming. The multi-platform sync is seamless and the UI is beautiful.",
-        platform: "Codeforces",
-    },
-    {
-        name: "Ananya Gupta",
-        role: "SDE Intern at Microsoft",
-        avatar: "AG",
-        rating: 5,
-        quote: "ClipFlow's AI suggestions are surprisingly accurate. It's like having a personal coding coach that knows exactly what I need to practice.",
-        platform: "LeetCode",
+        title: "Study groups and clubs",
+        icon: "👥",
+        description:
+            "Planned: shared progress views for college coding clubs and interview-prep groups. Not available yet.",
+        platform: "Roadmap",
     },
 ];
 
-function StarRating({ rating }: { rating: number }) {
-    return (
-        <div className="flex gap-1">
-            {[...Array(5)].map((_, i) => (
-                <svg
-                    key={i}
-                    className={`w-4 h-4 ${i < rating ? "text-yellow-accent" : "text-muted"}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-            ))}
-        </div>
-    );
-}
-
 export default function Testimonials() {
     return (
-        <section id="testimonials" className="py-20 md:py-28">
+        <section id="use-cases" className="py-20 md:py-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-16">
                     <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                        Testimonials
+                        Use Cases
                     </span>
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Loved by <span className="gradient-text">50,000+ students</span>
+                        Built for <span className="gradient-text">serious DSA learners</span>
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        See what ambitious coders are saying about their ClipFlow experience
+                        How ClipFlow fits into a real interview-preparation workflow
                     </p>
                 </div>
 
-                {/* Testimonials Grid */}
+                {/* Use Case Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {testimonials.map((testimonial, index) => (
+                    {useCases.map((useCase, index) => (
                         <Card
                             key={index}
                             className="p-6 border-border/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                         >
-                            {/* Rating */}
-                            <StarRating rating={testimonial.rating} />
-
-                            {/* Quote */}
-                            <p className="mt-4 text-foreground/90 text-sm leading-relaxed">
-                                &ldquo;{testimonial.quote}&rdquo;
+                            <div className="text-3xl mb-4">{useCase.icon}</div>
+                            <h3 className="font-semibold text-foreground mb-2">{useCase.title}</h3>
+                            <p className="text-foreground/80 text-sm leading-relaxed">
+                                {useCase.description}
                             </p>
-
-                            {/* Author */}
                             <div className="flex items-center gap-3 mt-6 pt-4 border-t border-border/50">
-                                <Avatar className="w-10 h-10">
-                                    <AvatarFallback className="bg-gradient-to-br from-purple-start to-purple-end text-foreground font-semibold text-sm">
-                                        {testimonial.avatar}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1">
-                                    <p className="font-semibold text-foreground text-sm">{testimonial.name}</p>
-                                    <p className="text-muted-foreground text-xs">{testimonial.role}</p>
-                                </div>
                                 <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                                    {testimonial.platform}
+                                    {useCase.platform}
                                 </span>
                             </div>
                         </Card>

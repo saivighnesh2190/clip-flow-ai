@@ -31,7 +31,7 @@ const plans = [
             "1-year analytics history",
             "Priority support",
         ],
-        cta: "Upgrade to Pro",
+        cta: "Coming Soon",
         href: "/checkout?plan=pro",
         popular: true,
     },
@@ -47,7 +47,7 @@ const plans = [
             "Shared goals & streaks",
             "Team dashboard",
         ],
-        cta: "Get Team Plan",
+        cta: "Coming Soon",
         href: "/checkout?plan=team",
         popular: false,
     },
@@ -66,7 +66,8 @@ export default function Comparison() {
                         Simple, <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">transparent pricing</span>
                     </h2>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Choose the plan that fits your coding journey. Start free, upgrade anytime.
+                        Everything you need to track your progress is free today. Paid tiers below are planned
+                        and payment processing is not live yet.
                     </p>
                 </div>
 
@@ -80,10 +81,10 @@ export default function Comparison() {
                                 : "border-border/50"
                                 } hover:shadow-lg transition-all duration-300`}
                         >
-                            {/* Popular Badge */}
+                            {/* Availability Badge */}
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-full">
-                                    Most Popular
+                                    Planned
                                 </div>
                             )}
 
@@ -123,10 +124,10 @@ export default function Comparison() {
                     ))}
                 </div>
 
-                {/* Money Back Guarantee */}
+                {/* Billing Status */}
                 <div className="text-center mt-12">
                     <p className="text-muted-foreground text-sm">
-                        🛡️ 30-day money-back guarantee • Cancel anytime
+                        ℹ️ Pro and Team are planned tiers. No payment gateway is connected, so nothing is charged.
                     </p>
                 </div>
             </div>

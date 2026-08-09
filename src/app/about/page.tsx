@@ -11,36 +11,18 @@ export const metadata: Metadata = {
 
 const team = [
     {
-        name: "Arjun Mehta",
-        role: "Founder & CEO",
-        avatar: "AM",
-        bio: "Former Google engineer and 3x ICPC World Finalist. Passionate about democratizing coding education.",
-    },
-    {
-        name: "Priya Venkat",
-        role: "CTO",
-        avatar: "PV",
-        bio: "Ex-Meta tech lead. Built systems serving billions. Loves competitive programming and teaching.",
-    },
-    {
-        name: "David Kim",
-        role: "Head of AI",
-        avatar: "DK",
-        bio: "PhD in ML from Stanford. Previously at OpenAI. Making AI work for learners, not the other way around.",
-    },
-    {
-        name: "Sarah Chen",
-        role: "Head of Product",
-        avatar: "SC",
-        bio: "Former PM at Notion. Obsessed with building tools that people actually want to use every day.",
+        name: "N Sai Vighnesh",
+        role: "Developer",
+        avatar: "SV",
+        bio: "Computer Science student at KL University. Built ClipFlow end to end - Next.js frontend, Supabase backend, and the Gemini-powered insight layer.",
     },
 ];
 
 const stats = [
-    { number: "50K+", label: "Active Users" },
-    { number: "2M+", label: "Problems Tracked" },
-    { number: "15+", label: "Team Members" },
-    { number: "10+", label: "Countries" },
+    { number: "2", label: "Platforms Integrated" },
+    { number: "Next.js 15", label: "Framework" },
+    { number: "Gemini", label: "AI Model" },
+    { number: "Open Source", label: "License" },
 ];
 
 const values = [
@@ -55,13 +37,13 @@ const values = [
         icon: "🔒",
     },
     {
-        title: "Accessibility",
-        description: "Great tools should be affordable. That's why we have a generous free tier.",
+        title: "Free to Use",
+        description: "Core tracking and analytics are free. No paywall on the features that matter for practice.",
         icon: "🌍",
     },
     {
-        title: "Community",
-        description: "We build with our community, not just for them. Your feedback shapes our roadmap.",
+        title: "Open Source",
+        description: "The full codebase is public on GitHub. Read it, fork it, or open an issue.",
         icon: "💬",
     },
 ];
@@ -79,12 +61,12 @@ export default function AboutPage() {
                         About Us
                     </span>
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                        On a mission to help <span className="gradient-text">every coder succeed</span>
+                        A student project to make <span className="gradient-text">DSA practice measurable</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-                        We started ClipFlow because we believe everyone deserves access to the tools and insights
-                        that help top performers excel. No expensive bootcamps, no gatekeeping — just smart technology
-                        that meets you where you are.
+                        ClipFlow is an independent, open-source project built by a student, for students.
+                        The goal is simple: make DSA practice measurable without paying for a bootcamp
+                        or maintaining yet another spreadsheet.
                     </p>
                 </div>
             </section>
@@ -95,7 +77,7 @@ export default function AboutPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {stats.map((stat, index) => (
                             <div key={index} className="text-center">
-                                <p className="text-4xl md:text-5xl font-bold text-foreground">{stat.number}</p>
+                                <p className="text-2xl md:text-3xl font-bold text-foreground">{stat.number}</p>
                                 <p className="text-muted-foreground mt-1">{stat.label}</p>
                             </div>
                         ))}
@@ -109,23 +91,22 @@ export default function AboutPage() {
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">Our Story</h2>
                     <div className="prose prose-lg max-w-none text-muted-foreground space-y-4">
                         <p>
-                            ClipFlow was born from frustration. In 2022, our founders were preparing for tech interviews
-                            while working full-time jobs. They were solving problems on LeetCode, competing on Codeforces,
-                            and practicing on CodeChef — but tracking progress across all these platforms was a nightmare.
+                            ClipFlow started as a personal problem. Preparing for campus placements meant solving
+                            problems on LeetCode and competing on Codeforces, but progress lived in two separate
+                            profile pages and a messy spreadsheet.
                         </p>
                         <p>
-                            Spreadsheets got messy. Progress felt invisible. And worst of all, there was no way to know
-                            what to practice next. Should I do more Dynamic Programming? Am I weak in Graphs?
-                            How do I compare to where I should be for Google interviews?
+                            Spreadsheets got stale fast, and the harder question was never answered: what should I
+                            practice next? Am I actually weak in graphs, or does it just feel that way?
                         </p>
                         <p>
-                            So we built ClipFlow — the tool we wished we had. An intelligent assistant that consolidates
-                            your coding progress, analyzes your patterns, and guides you towards mastery. No more guesswork.
-                            No more scattered data. Just focused, effective practice.
+                            So I built ClipFlow — a single dashboard that pulls public profile data from both
+                            platforms, charts progress over time, and uses the Gemini API to turn that raw history
+                            into concrete practice suggestions.
                         </p>
                         <p>
-                            Today, ClipFlow helps over 50,000 students and professionals track their DSA journey.
-                            We&apos;re just getting started.
+                            It is a working project under active development, not a company. The full source is on
+                            GitHub, and feedback or contributions are welcome.
                         </p>
                     </div>
                 </div>
@@ -150,8 +131,8 @@ export default function AboutPage() {
             {/* Team */}
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-12 text-center">Meet the Team</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-12 text-center">Who Built This</h2>
+                    <div className="grid grid-cols-1 max-w-md mx-auto gap-8">
                         {team.map((member, index) => (
                             <Card key={index} className="p-6 border-border/50 text-center hover:shadow-lg transition-shadow">
                                 <Avatar className="w-20 h-20 mx-auto mb-4">

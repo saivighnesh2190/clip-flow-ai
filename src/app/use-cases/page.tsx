@@ -3,96 +3,96 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Use Cases - ClipFlow",
-    description: "Discover how students, professionals, and teams use ClipFlow to accelerate their coding journey.",
+    description: "How students, competitive programmers, and self-learners can use ClipFlow to track DSA progress.",
 };
 
 const useCases = [
     {
         title: "Students",
         subtitle: "Preparing for Placements",
-        description: "Whether you're a CS undergraduate or preparing for your first tech job, ClipFlow helps you build a structured practice routine and track your progress towards interview readiness.",
+        description: "If you are a CS undergraduate working towards your first tech job, ClipFlow gives you one dashboard for your LeetCode and Codeforces practice instead of two profile pages and a spreadsheet.",
         features: [
             "Track problems solved across difficulty levels",
-            "AI-curated interview prep paths",
+            "AI suggestions on what topic to practice next",
             "Topic-wise progress for DSA fundamentals",
-            "Daily practice reminders",
-            "Resume-ready stats and achievements",
+            "Daily and weekly goal targets",
+            "Streaks to keep practice consistent",
         ],
         color: "from-purple-start to-purple-end",
         icon: "🎓",
+        status: "Available",
     },
     {
         title: "Competitive Programmers",
-        subtitle: "Climbing the Ranks",
-        description: "From Codeforces Pupil to Grandmaster, ClipFlow provides the analytics and insights you need to identify weaknesses and level up your competitive programming game.",
+        subtitle: "Tracking Contest Form",
+        description: "Codeforces rating history and contest results are charted over time, so you can see whether your form is actually improving rather than checking your profile after each round.",
         features: [
-            "Contest performance analytics",
-            "Rating change predictions",
-            "Compare with top-rated friends",
-            "Virtual contest tracking",
+            "Contest performance history",
+            "Rating trend charts",
             "Problem difficulty progression",
+            "Solved-count breakdown by tag",
         ],
         color: "from-yellow-accent to-orange-accent",
         icon: "🏆",
+        status: "Available",
     },
     {
         title: "Working Professionals",
-        subtitle: "Switching to FAANG",
-        description: "Balancing work and interview prep is hard. ClipFlow helps you make the most of your limited practice time with smart recommendations and focused learning paths.",
+        subtitle: "Interview Prep Around a Job",
+        description: "With limited practice time, the useful question is what to do tonight. The AI assistant reads your solved-problem breakdown and suggests where the next hour is best spent.",
         features: [
-            "Company-specific problem lists",
             "Time-boxed daily goals",
-            "Weekend warrior analytics",
-            "Interview-focused AI suggestions",
-            "Progress towards target companies",
+            "AI suggestions based on your weak topics",
+            "Weekly progress view",
+            "Single dashboard for both platforms",
         ],
         color: "from-green-400 to-emerald-500",
         icon: "💼",
-    },
-    {
-        title: "Coding Bootcamps",
-        subtitle: "Training the Next Generation",
-        description: "Manage cohorts, track student progress, and identify struggling learners early. ClipFlow Teams gives bootcamps the tools to improve student outcomes.",
-        features: [
-            "Cohort-wide dashboards",
-            "Individual student analytics",
-            "Automated progress reports",
-            "Custom assignment tracking",
-            "Instructor intervention alerts",
-        ],
-        color: "from-blue-400 to-indigo-500",
-        icon: "🏫",
-    },
-    {
-        title: "College Coding Clubs",
-        subtitle: "Building a Community",
-        description: "Run contests, create leaderboards, and foster healthy competition. ClipFlow helps coding clubs engage members and track collective growth.",
-        features: [
-            "Club leaderboards",
-            "Custom challenges",
-            "Member progress tracking",
-            "Achievement badges",
-            "Social sharing tools",
-        ],
-        color: "from-pink-400 to-rose-500",
-        icon: "👥",
+        status: "Available",
     },
     {
         title: "Self-Learners",
         subtitle: "Mastering DSA Solo",
-        description: "No mentor? No problem. ClipFlow's AI acts as your personal coach, guiding you through the vast world of data structures and algorithms.",
+        description: "Without a mentor, the hardest part is knowing what you are weak at. ClipFlow turns your own solve history into a plain-language read on which topics you are avoiding.",
         features: [
-            "Personalized learning paths",
-            "Adaptive difficulty scaling",
-            "Concept explanations",
+            "AI chat assistant for progress questions",
+            "Weak-topic identification",
             "Practice consistency tracking",
-            "Goal achievement rewards",
+            "Goal setting and review",
         ],
         color: "from-amber-400 to-orange-500",
         icon: "🚀",
+        status: "Available",
+    },
+    {
+        title: "College Coding Clubs",
+        subtitle: "Building a Community",
+        description: "Shared leaderboards and club-wide progress views are on the roadmap. The current version is single-user only, so this is not usable yet.",
+        features: [
+            "Club leaderboards",
+            "Member progress tracking",
+            "Custom challenges",
+        ],
+        color: "from-pink-400 to-rose-500",
+        icon: "👥",
+        status: "Planned",
+    },
+    {
+        title: "Coding Bootcamps",
+        subtitle: "Cohort Tracking",
+        description: "Cohort dashboards and instructor views are a roadmap idea, not a shipped feature. Nothing in this section is available today.",
+        features: [
+            "Cohort-wide dashboards",
+            "Individual student analytics",
+            "Automated progress reports",
+        ],
+        color: "from-blue-400 to-indigo-500",
+        icon: "🏫",
+        status: "Planned",
     },
 ];
 
@@ -112,7 +112,7 @@ export default function UseCasesPage() {
                         Built for <span className="gradient-text">every coder</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                        From students to professionals, from solo learners to teams — ClipFlow adapts to your journey
+                        How ClipFlow fits different kinds of practice. Items marked Planned are on the roadmap and not available yet.
                     </p>
                 </div>
             </section>
@@ -129,7 +129,12 @@ export default function UseCasesPage() {
                                 {/* Header */}
                                 <div className={`p-6 bg-gradient-to-r ${useCase.color}`}>
                                     <div className="text-4xl mb-3">{useCase.icon}</div>
-                                    <h3 className="text-xl font-bold text-foreground">{useCase.title}</h3>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <h3 className="text-xl font-bold text-foreground">{useCase.title}</h3>
+                                        <span className="text-[10px] uppercase tracking-wide font-semibold text-foreground/80 border border-foreground/30 rounded px-1.5 py-0.5 whitespace-nowrap">
+                                            {useCase.status}
+                                        </span>
+                                    </div>
                                     <p className="text-foreground/80 text-sm">{useCase.subtitle}</p>
                                 </div>
 
@@ -162,14 +167,15 @@ export default function UseCasesPage() {
                         Ready to start your journey?
                     </h2>
                     <p className="text-muted-foreground mb-8">
-                        Join 50,000+ coders who are already tracking their progress with ClipFlow
+                        Create a free account, connect your LeetCode and Codeforces handles, and see your
+                        progress in one place.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button size="lg" className="font-semibold px-8">
-                            Start Free Trial
+                        <Button size="lg" className="font-semibold px-8" asChild>
+                            <Link href="/signup">Get Started Free</Link>
                         </Button>
-                        <Button variant="outline" size="lg" className="font-semibold px-8">
-                            View Demo
+                        <Button variant="outline" size="lg" className="font-semibold px-8" asChild>
+                            <Link href="/features">Explore Features</Link>
                         </Button>
                     </div>
                 </div>

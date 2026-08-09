@@ -38,20 +38,26 @@ export default function PhoneMockup() {
                     {/* Stat Cards */}
                     <div className="hidden md:block absolute left-8 lg:left-24 top-12 z-10 animate-float">
                         <Card className="px-4 py-3 shadow-lg border-border/50 bg-yellow-accent">
-                            <p className="text-2xl font-bold text-foreground">4.8 hrs/day</p>
-                            <p className="text-sm text-foreground/80">Average Coding Time</p>
+                            <p className="text-2xl font-bold text-foreground">Daily Streaks</p>
+                            <p className="text-sm text-foreground/80">Consistency tracking</p>
                         </Card>
                     </div>
 
                     <div className="hidden md:block absolute right-8 lg:right-24 top-8 z-10 animate-float-delay-3">
                         <Card className="px-4 py-3 shadow-lg border-border/50 bg-orange-accent">
-                            <p className="text-2xl font-bold text-foreground">120K+</p>
-                            <p className="text-sm text-foreground/80">Problems Tracked</p>
+                            <p className="text-2xl font-bold text-foreground">Topic Analysis</p>
+                            <p className="text-sm text-foreground/80">Find your weak areas</p>
                         </Card>
                     </div>
 
                     {/* Phone Mockup */}
                     <div className="relative z-0">
+                        {/* Illustrative UI preview - values shown are sample data */}
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20">
+                            <span className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-[11px] font-medium border border-border/50 whitespace-nowrap">
+                                UI preview - sample data
+                            </span>
+                        </div>
                         {/* Phone Frame */}
                         <div className="relative mx-auto w-[280px] sm:w-[320px] md:w-[360px] h-[560px] sm:h-[640px] md:h-[720px] rounded-[3rem] bg-foreground p-3 shadow-2xl animate-float-slow">
                             {/* Phone Screen */}
@@ -65,10 +71,10 @@ export default function PhoneMockup() {
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
                                             <p className="text-xs text-muted-foreground">Good morning</p>
-                                            <p className="text-lg font-semibold text-foreground">Alex Chen</p>
+                                            <p className="text-lg font-semibold text-foreground">Sample User</p>
                                         </div>
                                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center">
-                                            <span className="text-sm font-bold text-foreground">AC</span>
+                                            <span className="text-sm font-bold text-foreground">SU</span>
                                         </div>
                                     </div>
 
@@ -137,12 +143,12 @@ export default function PhoneMockup() {
                 {/* Mobile Stat Cards */}
                 <div className="flex md:hidden justify-center gap-4 mt-8">
                     <Card className="px-4 py-3 shadow-lg border-border/50 bg-yellow-accent">
-                        <p className="text-xl font-bold text-foreground">4.8 hrs/day</p>
-                        <p className="text-xs text-foreground/80">Avg Coding Time</p>
+                        <p className="text-xl font-bold text-foreground">Daily Streaks</p>
+                        <p className="text-xs text-foreground/80">Consistency tracking</p>
                     </Card>
                     <Card className="px-4 py-3 shadow-lg border-border/50 bg-orange-accent">
-                        <p className="text-xl font-bold text-foreground">120K+</p>
-                        <p className="text-xs text-foreground/80">Problems Tracked</p>
+                        <p className="text-xl font-bold text-foreground">Topic Analysis</p>
+                        <p className="text-xs text-foreground/80">Find your weak areas</p>
                     </Card>
                 </div>
             </div>

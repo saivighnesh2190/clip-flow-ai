@@ -5,35 +5,35 @@ import { useState } from "react";
 const faqs = [
     {
         question: "How does ClipFlow track my progress across platforms?",
-        answer: "ClipFlow securely connects to your LeetCode, CodeChef, and Codeforces accounts using their public APIs. We sync your problem-solving data automatically, providing you with unified analytics across all platforms in one dashboard.",
+        answer: "You enter your public LeetCode and Codeforces handles. ClipFlow reads the publicly available profile data for those handles and combines it into a single dashboard. It never asks for your platform passwords, because it does not need them.",
     },
     {
         question: "Is my data secure and private?",
-        answer: "Absolutely. We use industry-standard encryption and never store your platform passwords. Your data is only accessible to you, and you can delete your account and all associated data at any time.",
+        answer: "ClipFlow only stores your account details and the public handles you connect, using Supabase with row-level security so your rows are only readable by you. No platform passwords are collected or stored, and you can delete your account and its data at any time.",
     },
     {
         question: "What makes the AI recommendations work?",
-        answer: "Our AI analyzes your problem-solving patterns, success rates, time spent per topic, and weak areas. It then recommends problems that will help you improve most efficiently, focusing on topics where you need the most practice.",
+        answer: "Your solved-problem breakdown by topic and difficulty is sent to the Google Gemini API with a prompt describing your current progress. Gemini returns suggestions on which topics to focus on next. It is a language model reading your stats, not a trained recommendation engine.",
     },
     {
         question: "Can I use ClipFlow for free?",
-        answer: "Yes! Our free tier includes progress tracking for one platform, basic analytics, and weekly AI insights. Upgrade to Pro for multi-platform sync, advanced analytics, and daily personalized recommendations.",
+        answer: "Yes. Progress tracking, the analytics dashboard, goals, and AI insights are all usable for free. Paid tiers are listed on the pricing page as a planned feature, but payment processing is not live yet.",
     },
     {
         question: "How often does the data sync?",
-        answer: "For Pro users, data syncs in real-time as you solve problems. Free tier users get hourly syncs. You can also manually trigger a sync anytime from your dashboard.",
+        answer: "Data is fetched when you load your dashboard or trigger a manual refresh. There is no background real-time sync at the moment.",
     },
     {
         question: "Does ClipFlow work for competitive programming?",
-        answer: "Yes! We have specific features for competitive programmers, including contest performance tracking, rating predictions, and comparison with friends. Many Codeforces Masters and Grandmasters use ClipFlow.",
+        answer: "Yes, to a point. Codeforces rating history and contest results are charted over time. Rating prediction and head-to-head comparison are not implemented yet.",
     },
     {
         question: "Can I track my friend's progress?",
-        answer: "With our Teams feature, you can create study groups, share progress, and compete on leaderboards. Great for college coding clubs and interview prep groups.",
+        answer: "Not yet. Shared study groups and leaderboards are on the roadmap, but the current version is single-user only.",
     },
     {
         question: "What platforms do you support?",
-        answer: "Currently we support LeetCode, Codeforces, CodeChef, HackerRank, and GeeksforGeeks. We're actively working on adding more platforms based on user requests.",
+        answer: "LeetCode and Codeforces are supported today. CodeChef support is partially implemented and disabled in the UI. Other platforms may be added later.",
     },
 ];
 

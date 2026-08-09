@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
     title: "Pricing - ClipFlow",
-    description: "Choose the perfect plan for your coding journey. Start free, upgrade anytime.",
+    description: "ClipFlow is currently free to use. Paid tiers are planned and not yet available.",
 };
 
 const plans = [
@@ -52,7 +52,7 @@ const plans = [
         notIncluded: [
             "Team features",
         ],
-        cta: "Upgrade to Pro",
+        cta: "Coming Soon",
         href: "/checkout?plan=pro",
         popular: true,
     },
@@ -71,7 +71,7 @@ const plans = [
             "Dedicated support",
         ],
         notIncluded: [],
-        cta: "Get Team Plan",
+        cta: "Coming Soon",
         href: "/checkout?plan=team",
         popular: false,
     },
@@ -79,20 +79,20 @@ const plans = [
 
 const faqItems = [
     {
-        question: "Can I change my plan later?",
-        answer: "Yes! You can upgrade, downgrade, or cancel your plan at any time. Changes take effect at the start of your next billing cycle.",
+        question: "Is anything paid right now?",
+        answer: "No. Every feature currently built into ClipFlow is free. The Pro and Team columns describe what paid tiers would include if billing is added later.",
     },
     {
         question: "What counts as an AI message?",
-        answer: "Each question you ask the AI assistant counts as one message. Free users get 10 per day, which resets at midnight.",
+        answer: "Each question you ask the AI assistant sends one request to the Gemini API. A daily limit is applied per account to stay inside the free API quota.",
     },
     {
         question: "What payment methods do you accept?",
-        answer: "We accept all major credit/debit cards, UPI, net banking, and wallets via Razorpay.",
+        answer: "None yet. No payment gateway is integrated, so the checkout page is a non-functional placeholder.",
     },
     {
-        question: "Do you offer student discounts?",
-        answer: "Yes! Students get 50% off Pro with a valid .edu email. Contact us for verification.",
+        question: "Will it stay free?",
+        answer: "The core tracking and analytics are intended to stay free. This is a student project, not a commercial product.",
     },
 ];
 
@@ -112,7 +112,8 @@ export default function PricingPage() {
                         Simple, <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">transparent pricing</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                        Start free and upgrade when you need more. No hidden fees.
+                        ClipFlow is free to use right now. The Pro and Team tiers below describe the planned
+                        roadmap - no payment gateway is connected, so nothing can be charged.
                     </p>
                 </div>
             </section>
@@ -131,7 +132,7 @@ export default function PricingPage() {
                             >
                                 {plan.popular && (
                                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-full">
-                                        Most Popular
+                                        Planned
                                     </div>
                                 )}
 
@@ -178,7 +179,7 @@ export default function PricingPage() {
 
                     <div className="text-center mt-12">
                         <p className="text-muted-foreground text-sm">
-                            🛡️ 30-day money-back guarantee • Cancel anytime
+                            ℹ️ Billing is not live. Paid tiers are shown as a roadmap only.
                         </p>
                     </div>
                 </div>
