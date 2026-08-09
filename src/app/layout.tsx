@@ -11,12 +11,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "ClipFlow - AI-Powered DSA Progress Tracking",
-  description: "Track your coding journey across LeetCode, CodeChef, and Codeforces. Analyze performance, build consistency, and let AI guide your daily learning.",
-  keywords: ["DSA", "LeetCode", "CodeChef", "Codeforces", "coding progress", "AI learning", "interview prep"],
+  description: "Track your coding journey across LeetCode and Codeforces. Analyze performance, build consistency, and let AI guide your daily learning.",
+  keywords: ["DSA", "LeetCode", "Codeforces", "coding progress", "AI learning", "interview prep"],
   authors: [{ name: "ClipFlow" }],
   openGraph: {
     title: "ClipFlow - AI-Powered DSA Progress Tracking",
-    description: "Track your coding journey across LeetCode, CodeChef, and Codeforces.",
+    description: "Track your coding journey across LeetCode and Codeforces.",
     type: "website",
   },
 };

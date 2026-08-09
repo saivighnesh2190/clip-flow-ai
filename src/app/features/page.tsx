@@ -14,7 +14,7 @@ const features = [
         items: [
             {
                 title: "Multi-Platform Sync",
-                description: "Connect LeetCode, Codeforces, CodeChef, HackerRank, and more. All your progress in one unified dashboard.",
+                description: "Connect LeetCode and Codeforces. All your progress in one unified dashboard.",
                 icon: "🔗",
             },
             {

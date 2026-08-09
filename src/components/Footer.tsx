@@ -23,7 +23,7 @@ export default function Footer() {
                         Ready to accelerate your DSA journey?
                     </h2>
                     <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                        Join thousands of students who are mastering data structures and algorithms with ClipFlow.
+                        Connect your LeetCode and Codeforces handles and see your DSA progress in one dashboard.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Button size="lg" className="font-semibold px-8" asChild>
