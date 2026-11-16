@@ -117,9 +117,9 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <main className="min-h-screen bg-background">
+            <main className="min-h-screen apple-canvas-ambient text-foreground">
                 <Navbar />
-                <div className="pt-32 flex items-center justify-center">
+                <div className="pt-36 flex items-center justify-center">
                     <svg className="animate-spin h-8 w-8 text-primary" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -130,68 +130,72 @@ export default function ProfilePage() {
     }
 
     return (
-        <main className="min-h-screen bg-background">
+        <main className="min-h-screen apple-canvas-ambient text-foreground selection:bg-blue-500/20 selection:text-blue-400">
             <Navbar />
 
-            <section className="pt-28 pb-16">
-                <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="pt-28 pb-16 md:pt-32">
+                <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
                     {/* Header */}
-                    <div className="mb-8">
-                        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Profile</h1>
-                        <p className="text-muted-foreground">Manage your account settings</p>
+                    <div className="mb-6">
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground font-sans mb-1.5">
+                            Account & Security
+                        </h1>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                            Manage your profile settings, telemetry keys, and security credentials.
+                        </p>
                     </div>
 
                     {/* Profile Info */}
-                    <Card className="p-6 border-border/50 mb-6">
+                    <Card className="p-6 md:p-8 apple-glass rounded-3xl relative overflow-hidden border border-white/10 dark:border-white/10">
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center text-white text-2xl font-bold">
+                            <div className="w-16 h-16 rounded-2xl apple-glass-pill flex items-center justify-center text-foreground text-2xl font-bold shadow-sm">
                                 {user?.email?.charAt(0).toUpperCase() || "U"}
                             </div>
                             <div>
-                                <h2 className="text-lg font-semibold text-foreground">
+                                <h2 className="text-lg font-semibold text-foreground tracking-tight">
                                     {user?.user_metadata?.full_name || user?.email?.split("@")[0]}
                                 </h2>
-                                <p className="text-sm text-muted-foreground">{user?.email}</p>
+                                <p className="text-xs text-muted-foreground font-mono">{user?.email}</p>
                             </div>
                         </div>
 
-                        <div className="space-y-3 text-sm">
-                            <div className="flex justify-between py-2 border-b border-border/50">
-                                <span className="text-muted-foreground">Email</span>
-                                <span className="text-foreground">{user?.email}</span>
+                        <div className="space-y-3 text-xs sm:text-sm">
+                            <div className="flex justify-between py-2.5 border-b border-white/10">
+                                <span className="text-muted-foreground">Account Email</span>
+                                <span className="text-foreground font-mono">{user?.email}</span>
                             </div>
-                            <div className="flex justify-between py-2 border-b border-border/50">
-                                <span className="text-muted-foreground">Member since</span>
+                            <div className="flex justify-between py-2.5 border-b border-white/10">
+                                <span className="text-muted-foreground">Registered Since</span>
                                 <span className="text-foreground">
                                     {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "N/A"}
                                 </span>
                             </div>
-                            <div className="flex justify-between py-2">
-                                <span className="text-muted-foreground">User ID</span>
-                                <span className="text-foreground font-mono text-xs">{user?.id.slice(0, 8)}...</span>
+                            <div className="flex justify-between py-2.5">
+                                <span className="text-muted-foreground">Identifier</span>
+                                <span className="text-foreground font-mono text-xs">{user?.id.slice(0, 12)}...</span>
                             </div>
                         </div>
                     </Card>
 
                     {/* Gemini API Key */}
-                    <Card className="p-6 border-border/50 mb-6 bg-gradient-to-br from-purple-start/10 to-purple-end/10">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center">
-                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <Card className="p-6 md:p-8 apple-glass rounded-3xl relative overflow-hidden apple-intelligence-aura border border-white/10 dark:border-white/10">
+                        <div className="flex items-center gap-3.5 mb-4">
+                            <div className="w-10 h-10 rounded-2xl apple-glass-pill flex items-center justify-center">
+                                <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground">Gemini API Key</h3>
-                                <p className="text-xs text-muted-foreground">Required for AI Chat & Insights (Stored encrypted)</p>
+                                <h3 className="font-semibold text-base text-foreground tracking-tight">Gemini Intelligence Key</h3>
+                                <p className="text-xs text-muted-foreground">Powers automated pattern diagnosis (AES-256 encrypted)</p>
                             </div>
                         </div>
 
                         {apiKeyMessage && (
                             <div
-                                className={`mb-4 p-3 rounded-lg text-sm ${apiKeyMessage.type === "success"
-                                    ? "bg-green-100 border border-green-200 text-green-700"
-                                    : "bg-red-100 border border-red-200 text-red-700"
+                                className={`mb-4 p-3 rounded-2xl text-xs ${apiKeyMessage.type === "success"
+                                    ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-500"
+                                    : "bg-rose-500/10 border border-rose-500/20 text-rose-500"
                                     }`}
                             >
                                 {apiKeyMessage.text}
@@ -200,34 +204,34 @@ export default function ProfilePage() {
 
                         {savedGeminiKey ? (
                             <div className="space-y-3">
-                                <div className="flex items-center gap-2 p-3 bg-green-100 border border-green-200 rounded-lg">
-                                    <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <div className="flex items-center gap-2 p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
+                                    <svg className="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                                     </svg>
-                                    <span className="text-sm text-green-700">API Key configured (encrypted)</span>
-                                    <span className="text-xs text-green-600 font-mono ml-auto">
+                                    <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Key Secured & Active</span>
+                                    <span className="text-[11px] text-muted-foreground font-mono ml-auto">
                                         {savedGeminiKey.slice(0, 8)}...{savedGeminiKey.slice(-4)}
                                     </span>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button variant="outline" size="sm" onClick={() => setShowApiKey(!showApiKey)} disabled={savingKey}>
-                                        {showApiKey ? "Hide" : "Update"} Key
+                                    <Button variant="outline" size="sm" className="h-8 rounded-full apple-glass-pill text-xs" onClick={() => setShowApiKey(!showApiKey)} disabled={savingKey}>
+                                        {showApiKey ? "Hide Key Form" : "Update Key"}
                                     </Button>
-                                    <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600" onClick={handleRemoveApiKey} disabled={savingKey}>
-                                        {savingKey ? "..." : "Remove"}
+                                    <Button variant="ghost" size="sm" className="h-8 rounded-full text-xs text-rose-500 hover:bg-rose-500/10" onClick={handleRemoveApiKey} disabled={savingKey}>
+                                        {savingKey ? "..." : "Remove Key"}
                                     </Button>
                                 </div>
                             </div>
                         ) : (
-                            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg mb-4">
-                                <p className="text-sm text-yellow-800">
-                                    <strong>No API key set.</strong> Add your Gemini API key to use AI features.
+                            <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl mb-4 text-xs">
+                                <p className="text-amber-600 dark:text-amber-400 font-medium">
+                                    No Gemini API key set. Connect your personal key to activate AI drills.
                                 </p>
                                 <a
                                     href="https://aistudio.google.com/apikey"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-sm text-primary hover:underline mt-1 inline-block"
+                                    className="text-primary hover:underline mt-1.5 inline-block font-medium"
                                 >
                                     Get your free API key from Google AI Studio →
                                 </a>
@@ -235,36 +239,36 @@ export default function ProfilePage() {
                         )}
 
                         {(showApiKey || !savedGeminiKey) && (
-                            <div className="space-y-3 mt-4">
+                            <div className="space-y-3 mt-4 pt-4 border-t border-white/10">
                                 <div>
-                                    <label htmlFor="geminiKey" className="block text-sm font-medium text-foreground mb-2">
-                                        API Key
+                                    <label htmlFor="geminiKey" className="block text-xs font-medium text-foreground mb-1.5 pl-1">
+                                        Gemini API Key
                                     </label>
                                     <input
                                         type="password"
                                         id="geminiKey"
                                         value={geminiKey}
                                         onChange={(e) => setGeminiKey(e.target.value)}
-                                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent font-mono"
+                                        className="w-full px-4 py-2.5 rounded-full apple-glass text-xs sm:text-sm text-foreground border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/40 font-mono"
                                         placeholder="AIza..."
                                     />
                                 </div>
-                                <Button onClick={handleSaveApiKey} disabled={savingKey}>
-                                    {savingKey ? "Saving..." : "Save API Key"}
+                                <Button size="sm" className="h-9 px-5 rounded-full apple-button-prominent text-xs font-medium" onClick={handleSaveApiKey} disabled={savingKey}>
+                                    {savingKey ? "Encrypting & Storing..." : "Save API Key"}
                                 </Button>
                             </div>
                         )}
                     </Card>
 
                     {/* Change Password */}
-                    <Card className="p-6 border-border/50 mb-6">
-                        <h3 className="font-semibold text-foreground mb-4">Change Password</h3>
+                    <Card className="p-6 md:p-8 apple-glass rounded-3xl relative overflow-hidden border border-white/10 dark:border-white/10">
+                        <h3 className="font-semibold text-base text-foreground mb-4 tracking-tight">Security Credentials</h3>
 
                         {message && (
                             <div
-                                className={`mb-4 p-3 rounded-lg text-sm ${message.type === "success"
-                                    ? "bg-green-100 border border-green-200 text-green-700"
-                                    : "bg-red-100 border border-red-200 text-red-700"
+                                className={`mb-4 p-3 rounded-2xl text-xs ${message.type === "success"
+                                    ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-500"
+                                    : "bg-rose-500/10 border border-rose-500/20 text-rose-500"
                                     }`}
                             >
                                 {message.text}
@@ -273,7 +277,7 @@ export default function ProfilePage() {
 
                         <form onSubmit={handlePasswordChange} className="space-y-4">
                             <div>
-                                <label htmlFor="newPassword" className="block text-sm font-medium text-foreground mb-2">
+                                <label htmlFor="newPassword" className="block text-xs font-medium text-foreground mb-1.5 pl-1">
                                     New Password
                                 </label>
                                 <input
@@ -281,14 +285,14 @@ export default function ProfilePage() {
                                     id="newPassword"
                                     value={passwords.new}
                                     onChange={(e) => setPasswords({ ...passwords, new: e.target.value })}
-                                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    className="w-full px-4 py-2.5 rounded-full apple-glass text-xs sm:text-sm text-foreground border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                                     placeholder="Enter new password"
                                     minLength={8}
                                     required
                                 />
                             </div>
                             <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-2">
+                                <label htmlFor="confirmPassword" className="block text-xs font-medium text-foreground mb-1.5 pl-1">
                                     Confirm New Password
                                 </label>
                                 <input
@@ -296,25 +300,27 @@ export default function ProfilePage() {
                                     id="confirmPassword"
                                     value={passwords.confirm}
                                     onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
-                                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    className="w-full px-4 py-2.5 rounded-full apple-glass text-xs sm:text-sm text-foreground border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                                     placeholder="Confirm new password"
                                     minLength={8}
                                     required
                                 />
                             </div>
-                            <Button type="submit" disabled={updating} className="w-full sm:w-auto">
+                            <Button type="submit" disabled={updating} size="sm" className="h-9 px-5 rounded-full apple-button-prominent text-xs font-medium">
                                 {updating ? "Updating..." : "Update Password"}
                             </Button>
                         </form>
                     </Card>
 
                     {/* Sign Out */}
-                    <Card className="p-6 border-border/50">
-                        <h3 className="font-semibold text-foreground mb-2">Sign Out</h3>
-                        <p className="text-sm text-muted-foreground mb-4">
-                            Sign out of your account on this device.
-                        </p>
-                        <Button variant="outline" onClick={handleSignOut}>
+                    <Card className="p-6 md:p-8 apple-glass rounded-3xl relative overflow-hidden border border-white/10 dark:border-white/10 flex items-center justify-between">
+                        <div>
+                            <h3 className="font-semibold text-sm text-foreground">Sign Out</h3>
+                            <p className="text-xs text-muted-foreground">
+                                Disconnect active session from this device.
+                            </p>
+                        </div>
+                        <Button variant="outline" size="sm" className="h-8 rounded-full apple-glass-pill text-xs" onClick={handleSignOut}>
                             Sign Out
                         </Button>
                     </Card>

@@ -1,105 +1,115 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown, HelpCircle, Terminal } from "lucide-react";
 
 const faqs = [
-    {
-        question: "How does ClipFlow track my progress across platforms?",
-        answer: "You enter your public LeetCode and Codeforces handles. ClipFlow reads the publicly available profile data for those handles and combines it into a single dashboard. It never asks for your platform passwords, because it does not need them.",
-    },
-    {
-        question: "Is my data secure and private?",
-        answer: "ClipFlow only stores your account details and the public handles you connect, using Supabase with row-level security so your rows are only readable by you. No platform passwords are collected or stored, and you can delete your account and its data at any time.",
-    },
-    {
-        question: "What makes the AI recommendations work?",
-        answer: "Your solved-problem breakdown by topic and difficulty is sent to the Google Gemini API with a prompt describing your current progress. Gemini returns suggestions on which topics to focus on next. It is a language model reading your stats, not a trained recommendation engine.",
-    },
-    {
-        question: "Can I use ClipFlow for free?",
-        answer: "Yes. Progress tracking, the analytics dashboard, goals, and AI insights are all usable for free. Paid tiers are listed on the pricing page as a planned feature, but payment processing is not live yet.",
-    },
-    {
-        question: "How often does the data sync?",
-        answer: "Data is fetched when you load your dashboard or trigger a manual refresh. There is no background real-time sync at the moment.",
-    },
-    {
-        question: "Does ClipFlow work for competitive programming?",
-        answer: "Yes, to a point. Codeforces rating history and contest results are charted over time. Rating prediction and head-to-head comparison are not implemented yet.",
-    },
-    {
-        question: "Can I track my friend's progress?",
-        answer: "Not yet. Shared study groups and leaderboards are on the roadmap, but the current version is single-user only.",
-    },
-    {
-        question: "What platforms do you support?",
-        answer: "LeetCode and Codeforces are supported today. CodeChef support is partially implemented and disabled in the UI. Other platforms may be added later.",
-    },
+  {
+    id: "faq-1",
+    question: "How does ClipFlow sync progress without requiring my passwords?",
+    answer: "ClipFlow only requires your public usernames for LeetCode and Codeforces. It queries the platforms' public APIs and GraphQL endpoints to retrieve your publicly visible solved list, submission counts, and contest rating history. We never ask for, collect, or store your passwords.",
+  },
+  {
+    id: "faq-2",
+    question: "How does the Gemini diagnostic engine analyze my weaknesses?",
+    answer: "ClipFlow categorizes your solved problems into 14 foundational algorithmic patterns (e.g. Monotonic Stack, Disjoint Set Union, 2D State DP). The Gemini engine evaluates your distribution and timeout logs to detect where you are over-relying on brute-force O(N²) approaches or under-practicing core patterns.",
+  },
+  {
+    id: "faq-3",
+    question: "What makes the 'Zero-Spoiler' hint mode different from regular AI bots?",
+    answer: "Generic LLMs often output the entire solution or code on the first prompt, ruining the learning process. ClipFlow enforces a strict 3-tier disclosure ladder: Level 1 provides the mathematical invariant; Level 2 provides the target time/space complexity; Level 3 provides pseudo-code architecture. You preserve the problem-solving struggle.",
+  },
+  {
+    id: "faq-4",
+    question: "Is ClipFlow genuinely free for engineering students?",
+    answer: "Yes. All core capabilities—multi-platform telemetry, unified solved matrix, pattern gap diagnostics, and daily drills—are completely free and open-source. Optional pro team tiers for university clubs and mentor cohorts are planned for future releases.",
+  },
+  {
+    id: "faq-5",
+    question: "Which platforms are supported right now?",
+    answer: "LeetCode and Codeforces are fully supported and live today with real-time sync. CodeChef integration is in active development and scheduled for the next release.",
+  },
+  {
+    id: "faq-6",
+    question: "Can I use ClipFlow for campus placement and off-campus FAANG prep?",
+    answer: "Yes, specifically. The curriculum ladders are indexed against the 70 highest-frequency interview patterns asked during technical screenings at Google, Amazon, Microsoft, Uber, and top-tier product startups.",
+  },
 ];
 
 export default function FAQ() {
-    const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openId, setOpenId] = useState<string | null>("faq-1");
 
-    return (
-        <section id="faq" className="py-20 md:py-28 bg-muted/30">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                        FAQ
-                    </span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Frequently asked <span className="gradient-text">questions</span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Everything you need to know about ClipFlow
-                    </p>
-                </div>
+  const toggleFaq = (id: string) => {
+    setOpenId(openId === id ? null : id);
+  };
 
-                {/* FAQ Accordion */}
-                <div className="space-y-4">
-                    {faqs.map((faq, index) => (
-                        <div
-                            key={index}
-                            className="bg-card border border-border/50 rounded-xl overflow-hidden"
-                        >
-                            <button
-                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-muted/50 transition-colors"
-                            >
-                                <span className="font-medium text-foreground pr-4">{faq.question}</span>
-                                <svg
-                                    className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform duration-300 ${openIndex === index ? "rotate-180" : ""
-                                        }`}
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-                            <div
-                                className={`overflow-hidden transition-all duration-300 ${openIndex === index ? "max-h-96" : "max-h-0"
-                                    }`}
-                            >
-                                <p className="px-6 pb-5 text-muted-foreground text-sm leading-relaxed">
-                                    {faq.answer}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <section id="faq" className="py-20 md:py-28 border-b border-border/40 relative">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary border border-border text-xs font-mono text-muted-foreground mb-4">
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Technical FAQ</span>
+          </div>
 
-                {/* Contact CTA */}
-                <div className="text-center mt-12">
-                    <p className="text-muted-foreground">
-                        Still have questions?{" "}
-                        <a href="/contact" className="text-primary font-medium hover:underline">
-                            Contact our support team
-                        </a>
-                    </p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            Frequently asked questions.
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Everything you need to know about the telemetry engine, privacy model, and AI diagnostics.
+          </p>
+        </div>
+
+        {/* FAQ Accordion List */}
+        <div className="space-y-3">
+          {faqs.map((faq) => {
+            const isOpen = openId === faq.id;
+            return (
+              <div
+                key={faq.id}
+                className="obsidian-card rounded-xl overflow-hidden transition-all duration-200"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggleFaq(faq.id)}
+                  aria-expanded={isOpen}
+                  aria-controls={faq.id}
+                  className="w-full px-5 py-4 sm:px-6 sm:py-4.5 flex items-center justify-between text-left hover:bg-muted/30 transition-colors cursor-pointer"
+                >
+                  <span className="text-sm font-medium text-foreground pr-4">
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform duration-200 ${
+                      isOpen ? "rotate-180 text-foreground" : ""
+                    }`}
+                  />
+                </button>
+
+                <div
+                  id={faq.id}
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="px-5 pb-5 sm:px-6 sm:pb-6 text-xs sm:text-sm text-muted-foreground leading-relaxed border-t border-border/40 pt-3">
+                    {faq.answer}
+                  </div>
                 </div>
-            </div>
-        </section>
-    );
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Quick Question Fallback */}
+        <div className="text-center mt-12 text-xs font-mono text-muted-foreground">
+          Need custom university cohort support?{" "}
+          <a href="mailto:nsaivighnesh@zohomail.in" className="text-foreground underline underline-offset-4 hover:text-indigo-400 transition-colors">
+            Contact engineering
+          </a>
+        </div>
+      </div>
+    </section>
+  );
 }

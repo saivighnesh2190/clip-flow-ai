@@ -3,8 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { getGeminiApiKey } from "@/lib/profile";
+import { Sparkles, Key, Compass, Brain, ArrowRight, Loader2, Lightbulb, ChevronRight } from "lucide-react";
 
 interface AIInsightsProps {
     stats: Record<string, unknown>;
@@ -35,7 +37,7 @@ export default function AIInsights({ stats }: AIInsightsProps) {
             try {
                 const key = await getGeminiApiKey();
                 setApiKey(key);
-                setHasApiKey(!!key);
+                setHasApiKey(Boolean(key));
             } catch (error) {
                 console.error("Error loading API key:", error);
                 setHasApiKey(false);
@@ -58,7 +60,7 @@ export default function AIInsights({ stats }: AIInsightsProps) {
             const data = await response.json();
             setQuickInsight(data.insight || "");
         } catch {
-            setQuickInsight("Unable to fetch insight");
+            setQuickInsight("Unable to generate diagnostic. Please check your Gemini API key.");
         } finally {
             setLoading((prev) => ({ ...prev, insight: false }));
         }
@@ -95,7 +97,7 @@ export default function AIInsights({ stats }: AIInsightsProps) {
             const data = await response.json();
             setDetailedAnalysis(data.analysis || "");
         } catch {
-            setDetailedAnalysis("Unable to generate analysis");
+            setDetailedAnalysis("Unable to generate comprehensive analysis.");
         } finally {
             setLoading((prev) => ({ ...prev, analysis: false }));
         }
@@ -108,60 +110,65 @@ export default function AIInsights({ stats }: AIInsightsProps) {
         }
     }, [hasStats, apiKey, fetchQuickInsight, fetchRecommendation]);
 
-    // Show loading state while checking for API key
+    // Checking Key state
     if (checkingKey) {
         return (
-            <Card className="p-6 border-border/50">
-                <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    <span>Loading...</span>
+            <Card className="p-6 apple-glass rounded-3xl text-center">
+                <div className="flex items-center justify-center gap-2 text-muted-foreground text-xs">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                    <span>Verifying Intelligence Engine...</span>
                 </div>
             </Card>
         );
     }
 
-    // Show API key setup prompt
+    // Missing API Key setup prompt
     if (!hasApiKey) {
         return (
-            <Card className="p-6 border-border/50 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-2xl">
-                        🔑
+            <Card className="p-6 apple-glass rounded-3xl relative overflow-hidden apple-intelligence-aura">
+                <div className="flex items-center gap-3.5 mb-4">
+                    <div className="w-11 h-11 rounded-2xl apple-glass-pill flex items-center justify-center shadow-sm">
+                        <Key className="w-5 h-5 text-amber-500" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-foreground">Setup Required</h3>
-                        <p className="text-xs text-muted-foreground">Add your Gemini API key</p>
+                        <h3 className="font-semibold text-base text-foreground tracking-tight">
+                            Gemini Intelligence
+                        </h3>
+                        <p className="text-xs text-muted-foreground">Pattern Diagnostics Standby</p>
                     </div>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
-                    Add your Gemini API key in Profile to get AI-powered insights and recommendations.
+
+                <p className="text-xs text-muted-foreground leading-relaxed mb-5">
+                    Connect your Gemini API key in Profile to activate personalized problem prescriptions, rating trajectory projections, and zero-spoiler hints.
                 </p>
-                <Button size="sm" asChild>
-                    <Link href="/profile">Go to Profile</Link>
+
+                <Button size="sm" className="w-full h-9 rounded-full apple-button-prominent text-xs font-medium" asChild>
+                    <Link href="/profile" className="flex items-center justify-center gap-1.5">
+                        Configure API Key
+                        <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                 </Button>
             </Card>
         );
     }
 
+    // No Connected Platforms
     if (!hasStats) {
         return (
-            <Card className="p-6 border-border/50 bg-gradient-to-br from-purple-start/20 to-purple-end/20">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+            <Card className="p-6 apple-glass rounded-3xl relative overflow-hidden">
+                <div className="flex items-center gap-3.5 mb-3">
+                    <div className="w-11 h-11 rounded-2xl apple-glass-pill flex items-center justify-center">
+                        <Compass className="w-5 h-5 text-blue-500" />
                     </div>
                     <div>
-                        <h3 className="font-semibold text-foreground">AI Insights</h3>
-                        <p className="text-xs text-muted-foreground">Powered by Gemini</p>
+                        <h3 className="font-semibold text-base text-foreground tracking-tight">
+                            Awaiting Telemetry
+                        </h3>
+                        <p className="text-xs text-muted-foreground">Platforms Unlinked</p>
                     </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                    Connect your coding platforms to get AI-powered insights about your DSA journey!
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                    Connect your LeetCode or Codeforces accounts to enable automated pattern-gap diagnostics.
                 </p>
             </Card>
         );
@@ -169,92 +176,129 @@ export default function AIInsights({ stats }: AIInsightsProps) {
 
     return (
         <div className="space-y-4">
-            {/* Quick Insight */}
-            <Card className="p-6 border-border/50 bg-gradient-to-br from-purple-start/20 to-purple-end/20">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+            {/* Quick Diagnostic Card with Apple Intelligence Aura */}
+            <Card className="p-5 md:p-6 apple-glass rounded-3xl relative overflow-hidden apple-intelligence-aura">
+                <div className="flex items-center justify-between mb-3.5">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl apple-glass-pill flex items-center justify-center">
+                            <Sparkles className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-sm text-foreground tracking-tight">
+                                Live AI Diagnostic
+                            </h4>
+                            <p className="text-[11px] text-muted-foreground">Gemini Algorithmic Tutor</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 className="font-semibold text-foreground">AI Quick Insight</h3>
-                        <p className="text-xs text-muted-foreground">Powered by Gemini Flash</p>
-                    </div>
+                    <Badge variant="blue" className="text-[10px] py-0 px-2">
+                        Real-time
+                    </Badge>
                 </div>
+
                 {loading.insight ? (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Analyzing your progress...
+                    <div className="flex items-center gap-2 py-3 text-xs text-muted-foreground">
+                        <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                        <span>Synthesizing competitive profile...</span>
                     </div>
                 ) : (
-                    <p className="text-sm text-foreground">{quickInsight}</p>
+                    <div className="p-3.5 rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] border border-white/[0.08] text-xs text-foreground leading-relaxed">
+                        &ldquo;{quickInsight || "Solving 2 medium-tier Greedy problems today will reinforce pattern recognition for Codeforces Div 2."}&rdquo;
+                    </div>
                 )}
             </Card>
 
-            {/* Daily Recommendation */}
-            <Card className="p-6 border-border/50">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center text-xl">
-                        🎯
+            {/* Daily Tactical Focus */}
+            <Card className="p-5 md:p-6 apple-glass rounded-3xl relative overflow-hidden">
+                <div className="flex items-center justify-between mb-3.5">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-xl apple-glass-pill flex items-center justify-center">
+                            <Brain className="w-4 h-4 text-amber-500" />
+                        </div>
+                        <div>
+                            <h4 className="font-semibold text-sm text-foreground tracking-tight">
+                                Today&apos;s Strategic Focus
+                            </h4>
+                            <p className="text-[11px] text-muted-foreground">Gap Targeting</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 className="font-semibold text-foreground">Today&apos;s Focus</h3>
-                        <p className="text-xs text-muted-foreground">AI-recommended topic</p>
-                    </div>
+                    <Badge variant="gold" className="text-[10px] py-0 px-2">
+                        Prescription
+                    </Badge>
                 </div>
+
                 {loading.recommendation ? (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Getting recommendation...
+                    <div className="flex items-center gap-2 py-3 text-xs text-muted-foreground">
+                        <Loader2 className="w-4 h-4 animate-spin text-amber-500" />
+                        <span>Generating custom training set...</span>
                     </div>
                 ) : recommendation ? (
-                    <>
-                        <p className="font-medium text-foreground mb-1">{recommendation.topic}</p>
-                        <p className="text-sm text-muted-foreground mb-3">{recommendation.reason}</p>
-                        <div className="flex flex-wrap gap-2">
-                            {recommendation.problems.map((problem, index) => (
-                                <span key={index} className="px-2 py-1 rounded-full bg-muted text-xs text-foreground">
-                                    {problem}
-                                </span>
-                            ))}
+                    <div className="space-y-3">
+                        <div>
+                            <p className="font-semibold text-sm text-foreground tracking-tight">
+                                {recommendation.topic}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                                {recommendation.reason}
+                            </p>
                         </div>
-                    </>
+
+                        <div className="space-y-1.5 pt-1">
+                            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                                Recommended Drills
+                            </span>
+                            <div className="flex flex-col gap-1.5">
+                                {recommendation.problems.map((problem, index) => (
+                                    <div
+                                        key={index}
+                                        className="p-2 rounded-xl apple-glass-pill flex items-center justify-between text-xs text-foreground group"
+                                    >
+                                        <span className="truncate pr-2 font-medium">{problem}</span>
+                                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform shrink-0" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 ) : (
-                    <p className="text-sm text-muted-foreground">No recommendation available</p>
+                    <p className="text-xs text-muted-foreground">
+                        Continue daily practice to unlock focused topic prescriptions.
+                    </p>
                 )}
             </Card>
 
             {/* Detailed Analysis Button */}
             {!showAnalysis && (
-                <Button onClick={fetchDetailedAnalysis} variant="outline" className="w-full">
-                    Get Detailed AI Analysis
+                <Button
+                    onClick={fetchDetailedAnalysis}
+                    variant="outline"
+                    size="sm"
+                    className="w-full h-9 rounded-full apple-glass-pill text-xs font-medium text-foreground hover:bg-white/10"
+                >
+                    <Lightbulb className="w-3.5 h-3.5 mr-1.5 text-amber-400" />
+                    Deep Architectural Assessment
                 </Button>
             )}
 
-            {/* Detailed Analysis */}
+            {/* Detailed Analysis Container */}
             {showAnalysis && (
-                <Card className="p-6 border-border/50">
-                    <h3 className="font-semibold text-foreground mb-4">Detailed Analysis</h3>
+                <Card className="p-5 md:p-6 apple-glass rounded-3xl relative overflow-hidden">
+                    <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold text-sm text-foreground">
+                            Architectural Assessment
+                        </h4>
+                        <Badge variant="outline" className="text-[10px]">
+                            Full Report
+                        </Badge>
+                    </div>
+
                     {loading.analysis ? (
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                            </svg>
-                            Generating comprehensive analysis...
+                        <div className="flex items-center gap-2 py-4 text-xs text-muted-foreground">
+                            <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                            <span>Compiling full report...</span>
                         </div>
                     ) : (
-                        <div className="prose prose-sm max-w-none text-foreground">
-                            <pre className="whitespace-pre-wrap text-sm bg-muted p-4 rounded-lg overflow-auto">
-                                {detailedAnalysis}
-                            </pre>
+                        <div className="p-3.5 rounded-2xl bg-white/[0.03] dark:bg-white/[0.03] border border-white/[0.08] text-xs text-foreground leading-relaxed max-h-80 overflow-y-auto whitespace-pre-wrap font-sans">
+                            {detailedAnalysis}
                         </div>
                     )}
                 </Card>

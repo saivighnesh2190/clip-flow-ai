@@ -53,7 +53,15 @@ export async function getProfile(): Promise<Profile | null> {
  */
 export async function getConnectedPlatforms(): Promise<ConnectedPlatform[]> {
     const profile = await getProfile();
-    if (!profile) return [];
+    if (!profile) {
+        if (typeof window !== 'undefined') {
+            try {
+                const guest = localStorage.getItem('clipflow_guest_platforms');
+                if (guest) return JSON.parse(guest);
+            } catch (e) {}
+        }
+        return [];
+    }
 
     const platforms: ConnectedPlatform[] = [];
 
@@ -74,7 +82,19 @@ export async function connectPlatform(platform: string, username: string): Promi
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return false;
+    if (!user) {
+        if (typeof window !== 'undefined') {
+            try {
+                const guest = localStorage.getItem('clipflow_guest_platforms');
+                const list = guest ? JSON.parse(guest) : [];
+                const updated = [...list.filter((p: { platform: string }) => p.platform !== platform), { platform, username }];
+                localStorage.setItem('clipflow_guest_platforms', JSON.stringify(updated));
+            } catch (e) {
+                console.error("Local storage error:", e);
+            }
+        }
+        return true;
+    }
 
     const updateData: Record<string, string> = {
         updated_at: new Date().toISOString(),
@@ -106,7 +126,19 @@ export async function disconnectPlatform(platform: string): Promise<boolean> {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return false;
+    if (!user) {
+        if (typeof window !== 'undefined') {
+            try {
+                const guest = localStorage.getItem('clipflow_guest_platforms');
+                const list = guest ? JSON.parse(guest) : [];
+                const updated = list.filter((p: { platform: string }) => p.platform !== platform);
+                localStorage.setItem('clipflow_guest_platforms', JSON.stringify(updated));
+            } catch (e) {
+                console.error("Local storage error:", e);
+            }
+        }
+        return true;
+    }
 
     const updateData: Record<string, string | null> = {
         updated_at: new Date().toISOString(),
@@ -138,7 +170,16 @@ export async function saveGeminiApiKey(apiKey: string): Promise<boolean> {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return false;
+    if (!user) {
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('clipflow_guest_gemini_key', apiKey);
+            } catch (e) {
+                console.error("Local storage error:", e);
+            }
+        }
+        return true;
+    }
 
     const encryptedKey = encrypt(apiKey);
 
@@ -163,7 +204,15 @@ export async function saveGeminiApiKey(apiKey: string): Promise<boolean> {
  */
 export async function getGeminiApiKey(): Promise<string | null> {
     const profile = await getProfile();
-    if (!profile?.gemini_api_key_encrypted) return null;
+    if (!profile?.gemini_api_key_encrypted) {
+        if (typeof window !== 'undefined') {
+            try {
+                const guestKey = localStorage.getItem('clipflow_guest_gemini_key');
+                if (guestKey) return guestKey;
+            } catch (e) {}
+        }
+        return null;
+    }
 
     return decrypt(profile.gemini_api_key_encrypted);
 }
@@ -175,7 +224,14 @@ export async function removeGeminiApiKey(): Promise<boolean> {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) return false;
+    if (!user) {
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.removeItem('clipflow_guest_gemini_key');
+            } catch (e) {}
+        }
+        return true;
+    }
 
     const { error } = await supabase
         .from('profiles')

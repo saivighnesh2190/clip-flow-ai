@@ -6,19 +6,31 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { 
+  Terminal, 
+  Sparkles, 
+  Github, 
+  LayoutDashboard, 
+  User as UserIcon, 
+  Menu, 
+  X,
+  Layers,
+  BarChart3,
+  Flame,
+  ArrowRight
+} from "lucide-react";
 
-// Navigation links for non-authenticated users
 const publicNavLinks = [
-  { label: "Platform", href: "/features" },
-  { label: "Use Cases", href: "/use-cases" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
+  { label: "Architecture", href: "#features" },
+  { label: "Interactive Diagnostic", href: "#diagnostic-demo" },
+  { label: "Pipeline", href: "#how-it-works" },
+  { label: "Benchmark", href: "#comparison" },
+  { label: "FAQ", href: "#faq" },
 ];
 
-// Navigation links for authenticated users
 const authNavLinks = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Analytics", href: "/analytics" },
+  { label: "Command Center", href: "/dashboard" },
+  { label: "Deep Analytics", href: "/analytics" },
   { label: "Profile", href: "/profile" },
   { label: "Contact", href: "/contact" },
 ];
@@ -27,13 +39,27 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } catch (e) {
+        console.error("Auth check failed:", e);
+      } finally {
+        setLoading(false);
+      }
     };
     getUser();
 
@@ -47,140 +73,143 @@ export default function Navbar() {
   const navLinks = user ? authNavLinks : publicNavLinks;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                className="w-5 h-5 text-primary-foreground"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <span className="text-xl font-bold text-foreground">ClipFlow</span>
-          </Link>
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 pt-3 pointer-events-none">
+      <nav className="max-w-6xl mx-auto rounded-full apple-island-dock pointer-events-auto px-4 sm:px-6 py-2 transition-all duration-300">
+        <div className="flex items-center justify-between">
+          {/* Logo & Brand */}
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-2.5 group">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/20 text-white flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
+                <Terminal className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold tracking-tight text-foreground">
+                  ClipFlow
+                </span>
+                <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-mono font-medium apple-glass-pill text-muted-foreground">
+                  v2.4
+                </span>
+              </div>
+            </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+            {/* Platform Status Indicator */}
+            <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 backdrop-blur-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>APIs Nominal</span>
+            </div>
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-1 bg-white/[0.04] dark:bg-white/[0.04] border border-white/[0.08] rounded-full p-1 shadow-inner">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="px-3.5 py-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-all rounded-full hover:bg-white/10 dark:hover:bg-white/10"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop CTAs & Utilities */}
+          <div className="hidden md:flex items-center gap-2.5">
+            <a
+              href="https://github.com/saivighnesh2190/clip-flow-ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground px-3 py-1.5 rounded-full apple-glass-pill transition-colors"
+              aria-label="GitHub Repository"
+            >
+              <Github className="w-3.5 h-3.5" />
+              <span className="font-mono text-[11px]">GitHub</span>
+            </a>
+
+            <ThemeToggle />
+
             {loading ? (
-              <div className="w-24 h-9 bg-muted animate-pulse rounded-lg" />
+              <div className="w-20 h-8 apple-glass-pill animate-pulse rounded-full" />
             ) : user ? (
-              <>
-                <Button size="sm" className="font-medium" asChild>
-                  <Link href="/dashboard">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                    Go to Dashboard
+              <div className="flex items-center gap-2">
+                <Button size="sm" className="h-8 text-xs font-medium apple-button-prominent" asChild>
+                  <Link href="/dashboard" className="flex items-center gap-1.5">
+                    <LayoutDashboard className="w-3.5 h-3.5" />
+                    Console
                   </Link>
                 </Button>
                 <Link
                   href="/profile"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted transition-colors"
+                  className="w-8 h-8 rounded-full apple-glass-pill flex items-center justify-center text-xs font-semibold text-foreground hover:border-primary transition-all shadow-xs"
+                  aria-label="Profile Settings"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center text-white text-sm font-medium">
-                    {user.email?.charAt(0).toUpperCase() || "U"}
-                  </div>
+                  {user.email?.charAt(0).toUpperCase() || <UserIcon className="w-3.5 h-3.5" />}
                 </Link>
-              </>
+              </div>
             ) : (
-              <>
-                <Button variant="ghost" size="sm" className="font-medium" asChild>
-                  <Link href="/login">Log in</Link>
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" className="h-8 text-xs font-medium text-muted-foreground hover:text-foreground rounded-full" asChild>
+                  <Link href="/login">Sign In</Link>
                 </Button>
-                <Button size="sm" className="font-medium" asChild>
-                  <Link href="/signup">Get Started</Link>
+                <Button size="sm" className="h-8 text-xs font-medium apple-button-prominent" asChild>
+                  <Link href="/signup" className="flex items-center gap-1">
+                    Connect Free
+                    <ArrowRight className="w-3 h-3 ml-0.5" />
+                  </Link>
                 </Button>
-              </>
+              </div>
             )}
-            <ThemeToggle />
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          {/* Mobile Menu Trigger */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-1.5 rounded-full text-muted-foreground hover:text-foreground apple-glass-pill transition-colors"
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
             >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Flyout */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border/50">
-            <div className="flex flex-col gap-4">
+          <div className="md:hidden mt-3 pt-3 border-t border-white/10 space-y-2">
+            <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
+                  className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/10 rounded-xl transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="flex flex-col gap-2 pt-4 border-t border-border/50">
-                {user ? (
-                  <>
-                    <Button size="sm" className="w-full font-medium" asChild>
-                      <Link href="/dashboard">Go to Dashboard</Link>
-                    </Button>
-                    <Button variant="outline" size="sm" className="w-full font-medium" asChild>
-                      <Link href="/profile">Profile</Link>
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="outline" size="sm" className="w-full font-medium" asChild>
-                      <Link href="/login">Log in</Link>
-                    </Button>
-                    <Button size="sm" className="w-full font-medium" asChild>
-                      <Link href="/signup">Get Started</Link>
-                    </Button>
-                  </>
-                )}
-              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/10 flex flex-col gap-2">
+              {user ? (
+                <>
+                  <Button size="sm" className="w-full text-xs font-medium apple-button-prominent" asChild>
+                    <Link href="/dashboard">Open Command Center</Link>
+                  </Button>
+                  <Button variant="outline" size="sm" className="w-full text-xs font-medium apple-glass-pill" asChild>
+                    <Link href="/profile">Account Settings</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" size="sm" className="w-full text-xs font-medium apple-glass-pill" asChild>
+                    <Link href="/login">Sign In</Link>
+                  </Button>
+                  <Button size="sm" className="w-full text-xs font-medium apple-button-prominent" asChild>
+                    <Link href="/signup">Get Started Free</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

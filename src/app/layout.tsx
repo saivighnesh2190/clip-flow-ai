@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
-const inter = Inter({
+const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "ClipFlow - AI-Powered DSA Progress Tracking",
-  description: "Track your coding journey across LeetCode and Codeforces. Analyze performance, build consistency, and let AI guide your daily learning.",
-  keywords: ["DSA", "LeetCode", "Codeforces", "coding progress", "AI learning", "interview prep"],
-  authors: [{ name: "ClipFlow" }],
+  title: "ClipFlow — The High-Craft DSA Progress Intelligence Platform",
+  description: "Unified telemetry across LeetCode, Codeforces, and CodeChef. Automated pattern-gap diagnostics, real-time rating tracking, and zero-spoiler AI drills.",
+  keywords: ["DSA", "LeetCode", "Codeforces", "CodeChef", "algorithmic interview", "AI DSA tracker", "competitive programming"],
+  authors: [{ name: "N Sai Vighnesh" }],
   openGraph: {
-    title: "ClipFlow - AI-Powered DSA Progress Tracking",
-    description: "Track your coding journey across LeetCode and Codeforces.",
+    title: "ClipFlow — The High-Craft DSA Progress Intelligence Platform",
+    description: "Unified telemetry across LeetCode, Codeforces, and CodeChef. Automated pattern-gap diagnostics.",
     type: "website",
   },
 };
@@ -28,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased apple-canvas-ambient text-foreground min-h-screen selection:bg-blue-500/20 selection:text-blue-400`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

@@ -1,84 +1,100 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { 
+  Terminal, 
+  Cpu, 
+  Flame, 
+  ArrowRight, 
+  CheckCircle2, 
+  Layers, 
+  Code2, 
+  Target 
+} from "lucide-react";
 
 const steps = [
-    {
-        number: "01",
-        title: "Connect Your Accounts",
-        description: "Enter your public LeetCode and Codeforces handles. No passwords, no OAuth, no complex setup.",
-        icon: (
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-            </svg>
-        ),
-    },
-    {
-        number: "02",
-        title: "Track Your Progress",
-        description: "See problems solved by difficulty, topic breakdown, streaks, and Codeforces rating history in one place.",
-        icon: (
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-        ),
-    },
-    {
-        number: "03",
-        title: "Get AI Recommendations",
-        description: "Receive personalized suggestions on what to practice next based on your strengths and weaknesses.",
-        icon: (
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-        ),
-    },
+  {
+    step: "01",
+    title: "Sync Public Handles",
+    description: "Enter your public LeetCode and Codeforces handles. ClipFlow connects to platform endpoints to pull your solve history, timestamps, and rating delta without requiring passwords or sensitive OAuth access.",
+    codeSnippet: "clipflow sync --leetcode=\"your_handle\" --codeforces=\"cf_handle\"",
+    badge: "Read-Only Telemetry"
+  },
+  {
+    step: "02",
+    title: "Algorithmic Pattern Audit",
+    description: "ClipFlow's engine classifies all solved problems into 14 core patterns. It computes your accuracy rates, identifies topics lagging behind, and cross-references gaps against interview hiring bar requirements.",
+    codeSnippet: "audit.run(matrix) -> Gap: Monotonic Stack (31% coverage)",
+    badge: "Gemini Analysis"
+  },
+  {
+    step: "03",
+    title: "Execute Targeted Drills",
+    description: "Receive 2-3 laser-focused problems daily with target time limits, space/time constraints, and zero-spoiler progressive hints. Strengthen your weak areas systematically instead of solving random problems.",
+    codeSnippet: "queue.next() -> LC 84 (Hard) [Target: 25m, Space: O(N)]",
+    badge: "High-Yield Sprints"
+  }
 ];
 
 export default function HowItWorks() {
-    return (
-        <section id="how-it-works" className="py-20 md:py-28 bg-muted/30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                        How It Works
-                    </span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Start tracking in <span className="gradient-text">3 simple steps</span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Get started in minutes and unlock the power of AI-driven coding analytics
-                    </p>
+  return (
+    <section id="how-it-works" className="py-20 md:py-28 border-b border-border/40 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary border border-border text-xs font-mono text-muted-foreground mb-4">
+            <Target className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Structured Workflow</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            Three steps to focused preparation.
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Stop grinding random questions. Follow a verified data-driven system built for engineering students and competitive programmers.
+          </p>
+        </div>
+
+        {/* 3 Step Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+          {steps.map((item, idx) => (
+            <div 
+              key={item.step}
+              className="obsidian-card rounded-xl p-6 sm:p-7 flex flex-col justify-between space-y-6 group hover:border-indigo-500/40 transition-all duration-300"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-2xl font-bold text-indigo-500/80">
+                    {item.step}
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-secondary text-muted-foreground border border-border">
+                    {item.badge}
+                  </span>
                 </div>
 
-                {/* Steps */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                    {/* Connection Line (Desktop) */}
-                    <div className="hidden md:block absolute top-20 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20" />
+                <h3 className="text-base sm:text-lg font-semibold text-foreground">
+                  {item.title}
+                </h3>
 
-                    {steps.map((step, index) => (
-                        <Card
-                            key={index}
-                            className="relative p-8 text-center border-border/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-card"
-                        >
-                            {/* Step Number */}
-                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold">
-                                {index + 1}
-                            </div>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
 
-                            {/* Icon */}
-                            <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-purple-start to-purple-end flex items-center justify-center mb-6 mt-4">
-                                <div className="text-foreground">{step.icon}</div>
-                            </div>
-
-                            {/* Content */}
-                            <h3 className="text-xl font-semibold text-foreground mb-3">{step.title}</h3>
-                            <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
-                        </Card>
-                    ))}
+              {/* Code Snippet Box */}
+              <div className="p-3 rounded-lg bg-secondary/60 border border-border/60 font-mono text-[11px] text-muted-foreground select-all overflow-x-auto">
+                <div className="flex items-center gap-1.5 text-border mb-1.5">
+                  <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                  <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                  <span className="w-2 h-2 rounded-full bg-muted-foreground/30" />
                 </div>
+                <code className="text-foreground/90 block whitespace-nowrap">
+                  $ {item.codeSnippet}
+                </code>
+              </div>
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

@@ -1,136 +1,195 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+"use client";
+
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { 
+  Check, 
+  X, 
+  Sparkles, 
+  ShieldCheck, 
+  ArrowRight,
+  Zap,
+  BarChart2
+} from "lucide-react";
+
+const matrixData = [
+  { feature: "Multi-Platform Telemetry (LC + CF)", clipflow: true, sheets: false, premium: false, genericAi: false },
+  { feature: "Zero Passwords / No OAuth Required", clipflow: true, sheets: true, premium: true, genericAi: true },
+  { feature: "Automated Pattern Gap Diagnostics", clipflow: true, sheets: false, premium: false, genericAi: "Manual" },
+  { feature: "Zero-Spoiler Stepwise Hints", clipflow: true, sheets: false, premium: false, genericAi: "Unreliable" },
+  { feature: "Contest Rating & Trend Analytics", clipflow: true, sheets: "Manual", premium: false, genericAi: false },
+  { feature: "100% Free Core Access", clipflow: true, sheets: true, premium: false, genericAi: "Limited" },
+];
 
 const plans = [
-    {
-        name: "Free",
-        price: "$0",
-        priceInr: "₹0",
-        period: "forever",
-        description: "Perfect for getting started",
-        features: [
-            "LeetCode & Codeforces tracking",
-            "Basic dashboard",
-            "10 AI messages per day",
-            "30-day analytics",
-        ],
-        cta: "Get Started Free",
-        href: "/signup",
-        popular: false,
-    },
-    {
-        name: "Pro",
-        price: "$5",
-        priceInr: "₹415",
-        period: "/month",
-        description: "For serious coders",
-        features: [
-            "Everything in Free",
-            "Unlimited AI messages",
-            "1-year analytics history",
-            "Priority support",
-        ],
-        cta: "Coming Soon",
-        href: "/checkout?plan=pro",
-        popular: true,
-    },
-    {
-        name: "Team",
-        price: "$15",
-        priceInr: "₹1,245",
-        period: "/month",
-        description: "For coding groups & clubs",
-        features: [
-            "Everything in Pro",
-            "Up to 5 team members",
-            "Shared goals & streaks",
-            "Team dashboard",
-        ],
-        cta: "Coming Soon",
-        href: "/checkout?plan=team",
-        popular: false,
-    },
+  {
+    name: "Community Core",
+    price: "$0",
+    period: "forever free",
+    description: "Full telemetry, pattern diagnostics, and daily drills for student engineers.",
+    features: [
+      "LeetCode & Codeforces sync",
+      "Unified Solved Matrix & topic coverage",
+      "Gemini pattern gap diagnostics",
+      "Daily targeted practice queues",
+      "Contest rating trajectory tracking",
+      "Community GitHub support",
+    ],
+    cta: "Launch Workspace Free",
+    href: "/signup",
+    popular: true,
+  },
+  {
+    name: "Placement Pro",
+    price: "$5",
+    period: "per month",
+    description: "Deep mock interviews, automated Big-O code audits, and team study rooms.",
+    features: [
+      "Everything in Community Core",
+      "Unlimited deep Gemini code audits",
+      "Company-specific mock question ladders",
+      "Shared cohort leaderboards & club views",
+      "Priority API telemetry synchronization",
+      "Direct Discord engineering access",
+    ],
+    cta: "Coming Soon (Beta)",
+    href: "/signup",
+    popular: false,
+  },
 ];
 
 export default function Comparison() {
-    return (
-        <section id="pricing" className="py-20 md:py-28">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                        Pricing
-                    </span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Simple, <span className="bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">transparent pricing</span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Everything you need to track your progress is free today. Paid tiers below are planned
-                        and payment processing is not live yet.
-                    </p>
+  return (
+    <section id="comparison" className="py-20 md:py-28 border-b border-border/40 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary border border-border text-xs font-mono text-muted-foreground mb-4">
+            <BarChart2 className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Competitive Benchmark</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            Why engineers switch to ClipFlow.
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            Compare manual spreadsheets, expensive subscriptions, and generic LLM chats against a dedicated algorithmic engine.
+          </p>
+        </div>
+
+        {/* Feature Comparison Table */}
+        <div className="obsidian-card rounded-xl overflow-x-auto mb-16">
+          <table className="w-full text-left text-xs font-mono border-collapse">
+            <thead>
+              <tr className="border-b border-border bg-secondary/50">
+                <th className="p-4 text-muted-foreground font-semibold">CAPABILITY</th>
+                <th className="p-4 text-indigo-400 font-bold bg-indigo-500/10">CLIPFLOW AI</th>
+                <th className="p-4 text-muted-foreground font-normal">EXCEL / SHEETS</th>
+                <th className="p-4 text-muted-foreground font-normal">LEETCODE PREMIUM</th>
+                <th className="p-4 text-muted-foreground font-normal">GENERIC CHATGPT</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/60">
+              {matrixData.map((row, idx) => (
+                <tr key={idx} className="hover:bg-muted/30 transition-colors">
+                  <td className="p-4 font-sans text-xs font-medium text-foreground">
+                    {row.feature}
+                  </td>
+                  <td className="p-4 bg-indigo-500/[0.04]">
+                    <div className="flex items-center gap-1.5 text-indigo-400 font-semibold">
+                      <Check className="w-4 h-4 text-indigo-500" />
+                      <span>Native</span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-muted-foreground">
+                    {typeof row.sheets === "boolean" ? (
+                      row.sheets ? <Check className="w-4 h-4 text-emerald-500" /> : <X className="w-4 h-4 text-muted-foreground/40" />
+                    ) : (
+                      <span>{row.sheets}</span>
+                    )}
+                  </td>
+                  <td className="p-4 text-muted-foreground">
+                    {typeof row.premium === "boolean" ? (
+                      row.premium ? <Check className="w-4 h-4 text-emerald-500" /> : <X className="w-4 h-4 text-muted-foreground/40" />
+                    ) : (
+                      <span>{row.premium}</span>
+                    )}
+                  </td>
+                  <td className="p-4 text-muted-foreground">
+                    {typeof row.genericAi === "boolean" ? (
+                      row.genericAi ? <Check className="w-4 h-4 text-emerald-500" /> : <X className="w-4 h-4 text-muted-foreground/40" />
+                    ) : (
+                      <span>{row.genericAi}</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`obsidian-card rounded-xl p-6 sm:p-8 flex flex-col justify-between relative ${
+                plan.popular ? "border-indigo-500/50 shadow-indigo-500/5" : ""
+              }`}
+            >
+              {plan.popular && (
+                <div className="absolute -top-3 left-6">
+                  <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-indigo-500 text-white shadow-sm">
+                    Recommended for Students
+                  </span>
+                </div>
+              )}
+
+              <div>
+                <div className="flex justify-between items-baseline mb-4">
+                  <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
+                  <div className="text-right">
+                    <span className="text-3xl font-bold font-mono text-foreground">{plan.price}</span>
+                    <span className="text-xs font-mono text-muted-foreground ml-1.5">/{plan.period}</span>
+                  </div>
                 </div>
 
-                {/* Pricing Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                    {plans.map((plan, index) => (
-                        <Card
-                            key={index}
-                            className={`relative p-8 border-2 ${plan.popular
-                                ? "border-primary shadow-xl md:scale-105 bg-gradient-to-b from-primary/5 to-transparent"
-                                : "border-border/50"
-                                } hover:shadow-lg transition-all duration-300`}
-                        >
-                            {/* Availability Badge */}
-                            {plan.popular && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-full">
-                                    Planned
-                                </div>
-                            )}
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-6">
+                  {plan.description}
+                </p>
 
-                            {/* Plan Info */}
-                            <div className="text-center mb-8">
-                                <h3 className="text-xl font-bold text-foreground mb-2">{plan.name}</h3>
-                                <div className="flex items-baseline justify-center gap-1">
-                                    <span className="text-4xl font-bold text-foreground">{plan.price}</span>
-                                    <span className="text-muted-foreground">{plan.period}</span>
-                                </div>
-                                <p className="text-xs text-muted-foreground mt-1">{plan.priceInr}{plan.period !== "forever" && "/mo"}</p>
-                                <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-                            </div>
-
-                            {/* Features List */}
-                            <ul className="space-y-3 mb-8">
-                                {plan.features.map((feature, featureIndex) => (
-                                    <li key={featureIndex} className="flex items-center gap-3">
-                                        <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        <span className="text-sm text-foreground">{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* CTA Button with Link */}
-                            <Button
-                                className={`w-full ${plan.popular ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-0" : ""}`}
-                                variant={plan.popular ? "default" : "outline"}
-                                size="lg"
-                                asChild
-                            >
-                                <Link href={plan.href}>{plan.cta}</Link>
-                            </Button>
-                        </Card>
-                    ))}
+                <div className="space-y-2.5 pt-4 border-t border-border/60">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">
+                    Included capabilities:
+                  </span>
+                  {plan.features.map((feat) => (
+                    <div key={feat} className="flex items-center gap-2.5 text-xs text-foreground">
+                      <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
                 </div>
+              </div>
 
-                {/* Billing Status */}
-                <div className="text-center mt-12">
-                    <p className="text-muted-foreground text-sm">
-                        ℹ️ Pro and Team are planned tiers. No payment gateway is connected, so nothing is charged.
-                    </p>
-                </div>
+              <div className="pt-8">
+                <Button
+                  className={`w-full h-10 text-xs font-medium ${
+                    plan.popular
+                      ? "bg-foreground text-background hover:bg-foreground/90"
+                      : "bg-secondary text-foreground hover:bg-muted border border-border"
+                  }`}
+                  asChild
+                >
+                  <Link href={plan.href} className="flex items-center justify-center gap-1.5">
+                    {plan.cta}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </Button>
+              </div>
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

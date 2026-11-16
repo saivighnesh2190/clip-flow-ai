@@ -1,127 +1,201 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+"use client";
 
-const footerLinks = {
-    product: [
-        { label: "Features", href: "/features" },
-        { label: "Pricing", href: "/pricing" },
-        { label: "Use Cases", href: "/use-cases" },
-    ],
-    company: [
-        { label: "About", href: "/about" },
-        { label: "Contact", href: "/contact" },
-    ],
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { 
+  Terminal, 
+  Github, 
+  Mail, 
+  ArrowRight, 
+  ExternalLink, 
+  Code2, 
+  Heart,
+  ShieldCheck
+} from "lucide-react";
+
+const links = {
+  architecture: [
+    { label: "Capabilities", href: "#features" },
+    { label: "Interactive Diagnostic", href: "#diagnostic-demo" },
+    { label: "Three-Stage Ladder", href: "#how-it-works" },
+    { label: "Benchmark Matrix", href: "#comparison" },
+  ],
+  telemetry: [
+    { label: "LeetCode GraphQL", href: "https://leetcode.com", external: true },
+    { label: "Codeforces REST", href: "https://codeforces.com", external: true },
+    { label: "CodeChef Rankings", href: "https://codechef.com", external: true },
+    { label: "Google Gemini Engine", href: "https://ai.google.dev", external: true },
+  ],
+  engineering: [
+    { label: "GitHub Repository", href: "https://github.com/saivighnesh2190/clip-flow-ai", external: true },
+    { label: "Issue Tracker", href: "https://github.com/saivighnesh2190/clip-flow-ai/issues", external: true },
+    { label: "Author Profile", href: "https://github.com/saivighnesh2190", external: true },
+    { label: "Contact Engineering", href: "mailto:nsaivighnesh@zohomail.in", external: true },
+  ],
 };
 
 export default function Footer() {
-    return (
-        <footer className="border-t border-border bg-muted/30">
-            {/* CTA Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="text-center gradient-purple rounded-3xl p-8 md:p-12">
-                    <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                        Ready to accelerate your DSA journey?
-                    </h2>
-                    <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                        Connect your LeetCode and Codeforces handles and see your DSA progress in one dashboard.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Button size="lg" className="font-semibold px-8" asChild>
-                            <Link href="/signup">Get Started Free</Link>
-                        </Button>
-                        <Button variant="outline" size="lg" className="font-semibold px-8" asChild>
-                            <Link href="/contact">Contact Us</Link>
-                        </Button>
-                    </div>
-                </div>
+  return (
+    <footer className="border-t border-border bg-card/60 relative">
+      {/* Conversion Banner Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="apple-glass rounded-3xl p-8 sm:p-12 relative overflow-hidden apple-intelligence-aura">
+          {/* Subtle Accent Glow */}
+          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-4 backdrop-blur-md">
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Free Community Workspace</span>
             </div>
 
-            {/* Links Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    {/* Brand */}
-                    <div className="col-span-2 md:col-span-2">
-                        <Link href="/" className="flex items-center gap-2 mb-4">
-                            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    className="w-5 h-5 text-primary-foreground"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                >
-                                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                </svg>
-                            </div>
-                            <span className="text-lg font-bold text-foreground">ClipFlow</span>
-                        </Link>
-                        <p className="text-sm text-muted-foreground max-w-sm">
-                            AI-powered learning assistant for students mastering DSA. Track your progress across LeetCode and Codeforces with personalized insights.
-                        </p>
-                    </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-4 font-sans">
+              Ready to eliminate your DSA blind spots?
+            </h2>
 
-                    {/* Product */}
-                    <div>
-                        <h4 className="font-semibold text-foreground mb-4">Product</h4>
-                        <ul className="space-y-2">
-                            {footerLinks.product.map((link) => (
-                                <li key={link.label}>
-                                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-8">
+              Connect your public LeetCode and Codeforces handles in seconds. 
+              No passwords required, no credit cards, 100% free and open-source.
+            </p>
 
-                    {/* Company */}
-                    <div>
-                        <h4 className="font-semibold text-foreground mb-4">Company</h4>
-                        <ul className="space-y-2">
-                            {footerLinks.company.map((link) => (
-                                <li key={link.label}>
-                                    <Link href={link.href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <Button size="lg" className="h-11 px-7 text-xs sm:text-sm font-medium apple-button-prominent rounded-full" asChild>
+                <Link href="/signup" className="flex items-center justify-center gap-2">
+                  Launch Free Workspace
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+
+              <Button variant="outline" size="lg" className="h-11 px-7 text-xs sm:text-sm font-medium apple-glass-pill rounded-full" asChild>
+                <a 
+                  href="https://github.com/saivighnesh2190/clip-flow-ai" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2"
+                >
+                  <Github className="w-4 h-4" />
+                  Star on GitHub
+                </a>
+              </Button>
             </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Bottom Bar */}
-            <div className="border-t border-border">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-sm text-muted-foreground">
-                            © {new Date().getFullYear()} ClipFlow. All rights reserved.
-                        </p>
-                        <div className="flex items-center gap-4">
-                            <a
-                                href="https://github.com/saivighnesh2190"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-muted-foreground hover:text-foreground transition-colors"
-                                aria-label="GitHub"
-                            >
-                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                                </svg>
-                            </a>
-                            <a
-                                href="mailto:nsaivighnesh@zohomail.in"
-                                className="text-muted-foreground hover:text-foreground transition-colors"
-                                aria-label="Email"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+      {/* Main Directory Links Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-border/40">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          {/* Brand Info (Spans 2 cols) */}
+          <div className="col-span-2 space-y-4">
+            <Link href="/" className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-foreground text-background flex items-center justify-center shadow-xs">
+                <Terminal className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-base font-semibold tracking-tight text-foreground">
+                ClipFlow AI
+              </span>
+            </Link>
+
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-sm">
+              The high-craft DSA intelligence platform. Unified telemetry across LeetCode and Codeforces, 
+              automated pattern-gap diagnostics, and zero-spoiler targeted drills.
+            </p>
+
+            <div className="flex items-center gap-2 pt-2">
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono text-emerald-500 bg-emerald-500/10 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Telemetry Nominal</span>
+              </div>
             </div>
-        </footer>
-    );
+          </div>
+
+          {/* Links Column 1 */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-foreground mb-4">
+              Architecture
+            </h4>
+            <ul className="space-y-2.5 text-xs font-mono">
+              {links.architecture.map((l) => (
+                <li key={l.label}>
+                  <Link href={l.href} className="text-muted-foreground hover:text-foreground transition-colors">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Links Column 2 */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-foreground mb-4">
+              Telemetry
+            </h4>
+            <ul className="space-y-2.5 text-xs font-mono">
+              {links.telemetry.map((l) => (
+                <li key={l.label}>
+                  <a 
+                    href={l.href} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+                  >
+                    {l.label}
+                    <ExternalLink className="w-2.5 h-2.5 opacity-60" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Links Column 3 */}
+          <div>
+            <h4 className="text-xs font-mono font-semibold uppercase tracking-wider text-foreground mb-4">
+              Engineering
+            </h4>
+            <ul className="space-y-2.5 text-xs font-mono">
+              {links.engineering.map((l) => (
+                <li key={l.label}>
+                  <a 
+                    href={l.href} 
+                    target={l.external ? "_blank" : undefined}
+                    rel={l.external ? "noopener noreferrer" : undefined}
+                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+                  >
+                    {l.label}
+                    {l.external && <ExternalLink className="w-2.5 h-2.5 opacity-60" />}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Sub-Bar */}
+      <div className="border-t border-border/40 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-muted-foreground">
+          <p>© {new Date().getFullYear()} ClipFlow AI. Engineered by N Sai Vighnesh.</p>
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://github.com/saivighnesh2190/clip-flow-ai" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <Github className="w-3.5 h-3.5" />
+              <span>MIT License</span>
+            </a>
+            <span>•</span>
+            <a 
+              href="mailto:nsaivighnesh@zohomail.in" 
+              className="hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>nsaivighnesh@zohomail.in</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }

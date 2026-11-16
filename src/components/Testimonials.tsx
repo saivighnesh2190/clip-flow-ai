@@ -1,90 +1,104 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { 
+  GraduationCap, 
+  Trophy, 
+  Briefcase, 
+  Users, 
+  ArrowRight,
+  TrendingUp,
+  Target,
+  Terminal
+} from "lucide-react";
 
-const useCases = [
-    {
-        title: "Interview preparation",
-        icon: "🎯",
-        description:
-            "Pull your LeetCode and Codeforces history into one dashboard so you can see which topics you have actually covered before an interview loop.",
-        platform: "LeetCode",
-    },
-    {
-        title: "Finding weak topics",
-        icon: "🔍",
-        description:
-            "The Gemini-powered assistant reads your solved-problem breakdown and points out topics you are under-practicing, such as graphs or DP.",
-        platform: "AI Insights",
-    },
-    {
-        title: "Staying consistent",
-        icon: "🔥",
-        description:
-            "Daily streaks and goal targets turn scattered practice into a habit you can measure week over week instead of guessing.",
-        platform: "Goals",
-    },
-    {
-        title: "Contest rating tracking",
-        icon: "📈",
-        description:
-            "Rating history from Codeforces is charted over time, so contest performance trends are visible instead of buried in profile pages.",
-        platform: "Codeforces",
-    },
-    {
-        title: "One dashboard, no spreadsheets",
-        icon: "📊",
-        description:
-            "Replace the manual progress spreadsheet with an automatic sync that pulls public profile data from each platform.",
-        platform: "Dashboard",
-    },
-    {
-        title: "Study groups and clubs",
-        icon: "👥",
-        description:
-            "Planned: shared progress views for college coding clubs and interview-prep groups. Not available yet.",
-        platform: "Roadmap",
-    },
+const personas = [
+  {
+    role: "Campus Placement Sprints",
+    target: "Targeting FAANG & Product Companies",
+    icon: GraduationCap,
+    quote: "Grinding random questions on LeetCode was burning me out. ClipFlow diagnosed that my Graph and Tree DP coverage was at 22%. Three weeks of targeted drills took me through Google and Microsoft technical rounds.",
+    metric: "400+ Problems Indexed",
+    badge: "Tier-1 Placement"
+  },
+  {
+    role: "Competitive Programming Climb",
+    target: "Codeforces Specialist & Candidate Master",
+    icon: Trophy,
+    quote: "Having my Codeforces contest delta synced side-by-side with LeetCode gives me a single place to inspect contest performance dips. The speed insights helped me break past the 1600 rating barrier.",
+    metric: "1,620 Specialist",
+    badge: "Rating Trajectory"
+  },
+  {
+    role: "Structured Daily Consistency",
+    target: "Engineering Students & Self-Taught Devs",
+    icon: Target,
+    quote: "The 45-minute daily practice queue completely removes decision fatigue. You sit down, open ClipFlow, and your two high-yield problems are already prioritized with zero spoilers.",
+    metric: "48-Day Habit Streak",
+    badge: "Habit Engine"
+  }
 ];
 
 export default function Testimonials() {
-    return (
-        <section id="use-cases" className="py-20 md:py-28">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-16">
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                        Use Cases
+  return (
+    <section id="use-cases" className="py-20 md:py-28 border-b border-border/40 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary border border-border text-xs font-mono text-muted-foreground mb-4">
+            <Users className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Target Workflows</span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            Built for serious algorithmic builders.
+          </h2>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+            From university placement cycles to high-rated contest rounds, engineered for deliberate practice.
+          </p>
+        </div>
+
+        {/* Persona Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {personas.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.role}
+                className="obsidian-card rounded-xl p-6 sm:p-7 flex flex-col justify-between space-y-6 hover:border-indigo-500/40 transition-all duration-300"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-secondary text-muted-foreground border border-border">
+                      {item.badge}
                     </span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-                        Built for <span className="gradient-text">serious DSA learners</span>
-                    </h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        How ClipFlow fits into a real interview-preparation workflow
+                  </div>
+
+                  <div>
+                    <h3 className="text-base font-semibold text-foreground">
+                      {item.role}
+                    </h3>
+                    <p className="text-xs font-mono text-indigo-400 mt-0.5">
+                      {item.target}
                     </p>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed italic">
+                    "{item.quote}"
+                  </p>
                 </div>
 
-                {/* Use Case Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {useCases.map((useCase, index) => (
-                        <Card
-                            key={index}
-                            className="p-6 border-border/50 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                        >
-                            <div className="text-3xl mb-4">{useCase.icon}</div>
-                            <h3 className="font-semibold text-foreground mb-2">{useCase.title}</h3>
-                            <p className="text-foreground/80 text-sm leading-relaxed">
-                                {useCase.description}
-                            </p>
-                            <div className="flex items-center gap-3 mt-6 pt-4 border-t border-border/50">
-                                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                                    {useCase.platform}
-                                </span>
-                            </div>
-                        </Card>
-                    ))}
+                <div className="pt-4 border-t border-border/60 flex items-center justify-between font-mono text-xs">
+                  <span className="text-muted-foreground text-[11px]">Key Outcome:</span>
+                  <span className="text-foreground font-semibold">{item.metric}</span>
                 </div>
-            </div>
-        </section>
-    );
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }

@@ -31,7 +31,7 @@ interface PlatformStats {
     };
     codeforces?: {
         totalSolved: number;
-        user?: { rating: number };
+        user?: { rating: number; maxRating?: number; rank?: string };
     };
 }
 
@@ -134,9 +134,9 @@ export default function AnalyticsPage() {
 
     if (loading) {
         return (
-            <main className="min-h-screen bg-background">
+            <main className="min-h-screen apple-canvas-ambient text-foreground">
                 <Navbar />
-                <div className="pt-32 flex items-center justify-center">
+                <div className="pt-36 flex items-center justify-center">
                     <svg className="animate-spin h-8 w-8 text-primary" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -147,73 +147,84 @@ export default function AnalyticsPage() {
     }
 
     return (
-        <main className="min-h-screen bg-background">
+        <main className="min-h-screen apple-canvas-ambient text-foreground selection:bg-blue-500/20 selection:text-blue-400">
             <Navbar />
 
-            <section className="pt-28 pb-16">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section className="pt-28 pb-16 md:pt-32">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                     {/* Header */}
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-2 border-b border-white/10">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">Analytics</h1>
-                            <p className="text-muted-foreground">Track your DSA progress over time</p>
+                            <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-sans mb-1.5">
+                                Performance Telemetry
+                            </h1>
+                            <p className="text-xs sm:text-sm text-muted-foreground">
+                                Historical algorithmic trajectory, consistency streak, and active interview milestones.
+                            </p>
                         </div>
-                        <div className="flex gap-2 mt-4 md:mt-0">
+                        <div className="flex items-center gap-1.5 p-1 rounded-full apple-glass-pill shadow-inner">
                             {[30, 90, 365].map((days) => (
-                                <Button
+                                <button
                                     key={days}
-                                    variant={timeRange === days ? "default" : "outline"}
-                                    size="sm"
+                                    className={`px-4 py-1 rounded-full text-xs font-medium transition-all ${
+                                        timeRange === days
+                                            ? "apple-button-prominent text-white shadow-xs"
+                                            : "text-muted-foreground hover:text-foreground"
+                                    }`}
                                     onClick={() => setTimeRange(days as 30 | 90 | 365)}
                                 >
-                                    {days === 365 ? "1Y" : `${days}D`}
-                                </Button>
+                                    {days === 365 ? "1 Year" : `${days} Days`}
+                                </button>
                             ))}
                         </div>
                     </div>
 
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                        <Card className="p-4 border-border/50">
-                            <p className="text-sm text-muted-foreground">Current Streak</p>
-                            <p className="text-3xl font-bold text-foreground flex items-center gap-2">
+                    {/* Stats Metric Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Current Streak</p>
+                            <p className="text-3xl md:text-4xl font-bold text-foreground font-sans mt-2 flex items-center gap-2">
                                 {streak.current}
                                 <span className="text-2xl">🔥</span>
                             </p>
-                            <p className="text-xs text-muted-foreground">days</p>
+                            <p className="text-xs text-muted-foreground mt-1">consecutive days</p>
                         </Card>
-                        <Card className="p-4 border-border/50">
-                            <p className="text-sm text-muted-foreground">Longest Streak</p>
-                            <p className="text-3xl font-bold text-foreground">{streak.longest}</p>
-                            <p className="text-xs text-muted-foreground">days</p>
+                        <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Longest Streak</p>
+                            <p className="text-3xl md:text-4xl font-bold text-foreground font-sans mt-2">{streak.longest}</p>
+                            <p className="text-xs text-muted-foreground mt-1">all-time record</p>
                         </Card>
-                        <Card className="p-4 border-border/50">
-                            <p className="text-sm text-muted-foreground">Total Solved</p>
-                            <p className="text-3xl font-bold text-primary">{totalProblems}</p>
-                            <p className="text-xs text-muted-foreground">all-time</p>
+                        <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Total Solved</p>
+                            <p className="text-3xl md:text-4xl font-bold text-blue-500 font-sans mt-2">{totalProblems}</p>
+                            <p className="text-xs text-muted-foreground mt-1">across all ecosystems</p>
                         </Card>
-                        <Card className="p-4 border-border/50">
-                            <p className="text-sm text-muted-foreground">Active Goals</p>
-                            <p className="text-3xl font-bold text-foreground">{goals.length}</p>
-                            <p className="text-xs text-muted-foreground">in progress</p>
+                        <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Active Goals</p>
+                            <p className="text-3xl md:text-4xl font-bold text-foreground font-sans mt-2">{goals.length}</p>
+                            <p className="text-xs text-muted-foreground mt-1">milestones in progress</p>
                         </Card>
                     </div>
 
-                    {/* Platform Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    {/* Platform Highlights */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {leetcodeData && (
-                            <Card className="p-4 border-border/50 bg-gradient-to-r from-yellow-500/10 to-transparent">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-2xl">🟡</span>
-                                    <h3 className="font-semibold text-foreground">LeetCode</h3>
+                            <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-8 h-8 rounded-xl apple-glass-pill flex items-center justify-center text-amber-500 font-bold text-xs">
+                                            LC
+                                        </div>
+                                        <h3 className="font-semibold text-foreground text-sm">LeetCode Telemetry</h3>
+                                    </div>
                                     {leetcodeData.user?.contestRating && leetcodeData.user.contestRating > 0 && (
-                                        <span className="ml-auto px-2 py-1 bg-yellow-500/20 rounded-full text-sm font-bold text-yellow-500">
-                                            Rating: {leetcodeData.user.contestRating}
+                                        <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-500">
+                                            Rating: {Math.round(leetcodeData.user.contestRating)}
                                         </span>
                                     )}
                                 </div>
-                                <p className="text-2xl font-bold text-foreground">{leetcodeData.totalSolved} solved</p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-2xl font-bold text-foreground font-sans">{leetcodeData.totalSolved} solved</p>
+                                <p className="text-xs text-muted-foreground mt-1">
                                     Easy: {leetcodeData.easySolved} • Medium: {leetcodeData.mediumSolved} • Hard: {leetcodeData.hardSolved}
                                     {leetcodeData.user?.contestAttended && leetcodeData.user.contestAttended > 0 && (
                                         <span> • {leetcodeData.user.contestAttended} contests</span>
@@ -222,14 +233,21 @@ export default function AnalyticsPage() {
                             </Card>
                         )}
                         {codeforcesData && (
-                            <Card className="p-4 border-border/50 bg-gradient-to-r from-blue-500/10 to-transparent">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-2xl">🔵</span>
-                                    <h3 className="font-semibold text-foreground">Codeforces</h3>
+                            <Card className="p-5 apple-glass rounded-3xl relative overflow-hidden">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-8 h-8 rounded-xl apple-glass-pill flex items-center justify-center text-blue-500 font-bold text-xs">
+                                            CF
+                                        </div>
+                                        <h3 className="font-semibold text-foreground text-sm">Codeforces Telemetry</h3>
+                                    </div>
+                                    <span className="px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-semibold text-blue-500 capitalize">
+                                        {codeforcesData.user?.rank || "Unrated"}
+                                    </span>
                                 </div>
-                                <p className="text-2xl font-bold text-foreground">{codeforcesData.totalSolved} solved</p>
-                                <p className="text-sm text-muted-foreground">
-                                    Rating: {codeforcesData.user?.rating || 'Unrated'}
+                                <p className="text-2xl font-bold text-foreground font-sans">{codeforcesData.totalSolved} solved</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Rating: <strong className="text-foreground">{codeforcesData.user?.rating || "Unrated"}</strong> (Max: {codeforcesData.user?.maxRating || "N/A"})
                                 </p>
                             </Card>
                         )}
